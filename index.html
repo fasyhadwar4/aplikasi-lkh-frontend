@@ -161,11 +161,14 @@ let filterHarianSebelumPrint = null;
 async function callApi(action, params = {}) {
   const response = await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // hindari CORS preflight
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ action, params })
   });
-  if (!response.ok) throw new Error('HTTP ' + response.status);
-  return await response.json();
+  const responseText = await response.text();
+  if (!response.ok) {
+    throw new Error('HTTP ' + response.status + ' - Isi respons: ' + responseText.substring(0, 300));
+  }
+  return JSON.parse(responseText);
 }
 
 window.onload = async function() {
