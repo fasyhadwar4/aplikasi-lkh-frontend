@@ -9,7 +9,15 @@
   body { background-color: #f4f6f9; font-family: 'Segoe UI', Arial, sans-serif; }
   .card { border-radius: 10px; border: 1px solid #e0e4e8; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .table-custom th { background-color: #f1f3f5; text-align: center; vertical-align: middle; }
-  #appContent, #loginScreen, #pilihOpsiScreen, #lockedScreen, #dashboardScreen, #statusAkunScreen { display: none; }
+  
+  /* Kelas pembantu tampilan layar penuh tunggal */
+  .screen-container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   @media print {
     .no-print, .no-print * { display: none !important; }
     body { background-color: white; padding: 0 !important; font-size: 11px; }
@@ -26,18 +34,18 @@
 <body class="p-3 p-md-4">
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuKxo96lbLXPeAcOu4zv50kKh9xj0EXGzkQWpQn9n6C-NZLGmLcqw2zBV9_xPtriSF/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuKxo96lbLXPeAcOu4zv50kKh9xj0EXGzkQWpQn9n6C-NZLGmLcqw2zBV9_xPtriSF/execU";
   const WA_CS_NUMBER = "6285696454569"; // format: 628xxxxxxxxxx
 </script>
 
+<!-- LAYAR LOADING AWAL -->
 <div id="loadingScreen" class="text-center p-5">
   <div class="spinner-border text-primary" role="status"></div>
   <p class="mt-2 text-muted">Memuat...</p>
 </div>
 
-<!-- LAYAR LOGIN / DAFTAR (halaman pertama pengunjung) -->
-<div id="loginScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+<!-- 1. LAYAR LOGIN / DAFTAR (Halaman utama pengunjung) -->
+<div id="loginScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 380px; width: 100%;">
     <h5 class="fw-bold text-center mb-3">🔑 Aplikasi LKH/LKB</h5>
 
@@ -68,12 +76,10 @@
 
     <div id="loginAlert" class="alert alert-danger small d-none mt-2"></div>
   </div>
-  </div>
 </div>
 
-<!-- LAYAR DASHBOARD MENU (setelah berhasil login) -->
-<div id="dashboardScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+<!-- 2. LAYAR DASHBOARD MENU (Setelah berhasil login) -->
+<div id="dashboardScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 420px; width: 100%;">
     <h5 class="fw-bold text-center mb-1">Selamat datang</h5>
     <p class="text-muted text-center small mb-3" id="dashboardUsername">-</p>
@@ -84,12 +90,10 @@
 
     <button class="btn btn-link w-100 text-danger" onclick="logout()">Keluar</button>
   </div>
-  </div>
 </div>
 
-<!-- LAYAR PILIH OPSI LOGIN -->
-<div id="pilihOpsiScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+<!-- 3. LAYAR PILIH OPSI PROFIL -->
+<div id="pilihOpsiScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 420px; width: 100%;">
     <h5 class="fw-bold text-center mb-2">Pilih Cara Isi Profil</h5>
     <p class="text-muted small text-center mb-3">Pilih salah satu opsi di bawah ini:</p>
@@ -111,12 +115,10 @@
     <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">← Kembali</button>
     <div id="opsiAlert" class="alert alert-danger small d-none mt-2"></div>
   </div>
-  </div>
 </div>
 
-<!-- LAYAR STATUS AKUN -->
-<div id="statusAkunScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+<!-- 4. LAYAR STATUS AKUN -->
+<div id="statusAkunScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 420px; width: 100%;">
     <h5 class="fw-bold text-center mb-3">Status Akun</h5>
     <div class="mb-2 d-flex"><strong style="width:140px;">Username</strong><span>: <span id="statusUsername">-</span></span></div>
@@ -125,22 +127,20 @@
     <a id="btnHubungiCsStatus" href="#" target="_blank" class="btn btn-success w-100 mb-2">💬 Hubungi CS / Perpanjang</a>
     <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">← Kembali</button>
   </div>
-  </div>
 </div>
 
-<!-- LAYAR TERKUNCI -->
-<div id="lockedScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
-  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+<!-- 5. LAYAR TERKUNCI -->
+<div id="lockedScreen" class="screen-container d-none">
   <div class="card p-4 text-center" style="max-width: 420px; width: 100%;">
     <h4 class="fw-bold text-danger mb-2">🔒 Akses Terkunci</h4>
     <p class="text-muted" id="lockedReason">Masa berlaku akun kamu sudah habis.</p>
     <a id="btnHubungiCs" href="#" target="_blank" class="btn btn-success w-100 mb-2">💬 Hubungi CS untuk Berlangganan</a>
     <button class="btn btn-outline-secondary w-100" onclick="logout()">Keluar</button>
   </div>
-  </div>
 </div>
 
-<div class="container" id="appContent" style="max-width: 900px;">
+<!-- 6. UTAMA: KONTEN APLIKASI LKH / LKB -->
+<div class="container d-none" id="appContent" style="max-width: 900px;">
 
   <div class="d-flex justify-content-between align-items-center mb-2 no-print">
     <h4 class="fw-bold m-0" id="mainReportTitle">LAPORAN KINERJA HARIAN</h4>
@@ -303,10 +303,18 @@ function sembunyikanAlert(elId) {
   document.getElementById(elId).classList.add('d-none');
 }
 
+/* Fungsi sakelar layar murni menggunakan utility Bootstrap */
 function sembunyikanSemuaLayar() {
-  ['loginScreen','dashboardScreen','pilihOpsiScreen','statusAkunScreen','lockedScreen','appContent'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
+  ['loadingScreen','loginScreen','dashboardScreen','pilihOpsiScreen','statusAkunScreen','lockedScreen','appContent'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('d-none');
   });
+}
+
+function tampilkanLayar(id) {
+  sembunyikanSemuaLayar();
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('d-none');
 }
 
 function gantiTabLogin(mode) {
@@ -321,14 +329,12 @@ function gantiTabLogin(mode) {
 
 window.onload = function() {
   document.getElementById('approvalDate').valueAsDate = new Date();
-  document.getElementById('loadingScreen').style.display = 'none';
 
   const savedUsername = localStorage.getItem('lkh_username');
   if (savedUsername) {
     pulihkanSesi(savedUsername);
   } else {
-    sembunyikanSemuaLayar();
-    document.getElementById('loginScreen').style.display = 'flex';
+    tampilkanLayar('loginScreen');
   }
 };
 
@@ -339,13 +345,11 @@ async function pulihkanSesi(username) {
       masukKeAplikasi(res);
     } else {
       localStorage.removeItem('lkh_username');
-      sembunyikanSemuaLayar();
-      document.getElementById('loginScreen').style.display = 'flex';
+      tampilkanLayar('loginScreen');
     }
   } catch (err) {
     localStorage.removeItem('lkh_username');
-    sembunyikanSemuaLayar();
-    document.getElementById('loginScreen').style.display = 'flex';
+    tampilkanLayar('loginScreen');
   }
 }
 
@@ -404,8 +408,7 @@ async function prosesDaftar() {
     btn.disabled = false; btn.innerText = "Daftar";
     if (res.success) {
       pendingUsername = u;
-      sembunyikanSemuaLayar();
-      document.getElementById('pilihOpsiScreen').style.display = 'flex';
+      tampilkanLayar('pilihOpsiScreen');
       toggleInputNip();
     } else {
       tampilkanAlert('loginAlert', res.error || "Gagal mendaftar.");
@@ -450,11 +453,10 @@ async function simpanOpsiLogin() {
 }
 
 function tampilkanLayarTerkunci(alasan) {
-  sembunyikanSemuaLayar();
   document.getElementById('lockedReason').innerText = alasan || 'Masa berlaku akun kamu sudah habis.';
   const pesanWa = encodeURIComponent('Halo, saya mau berlangganan aplikasi LKH. Username saya: ' + (currentUsername || ''));
   document.getElementById('btnHubungiCs').href = 'https://wa.me/' + WA_CS_NUMBER + '?text=' + pesanWa;
-  document.getElementById('lockedScreen').style.display = 'flex';
+  tampilkanLayar('lockedScreen');
 }
 
 function masukKeAplikasi(res) {
@@ -497,9 +499,8 @@ function masukKeAplikasi(res) {
 }
 
 function tampilkanDashboard() {
-  sembunyikanSemuaLayar();
   document.getElementById('dashboardUsername').innerText = 'Masuk sebagai: ' + currentUsername;
-  document.getElementById('dashboardScreen').style.display = 'flex';
+  tampilkanLayar('dashboardScreen');
 }
 
 function backToDashboard() {
@@ -508,11 +509,10 @@ function backToDashboard() {
 
 function bukaOpsiDariDashboard() {
   pendingUsername = currentUsername;
-  sembunyikanSemuaLayar();
-  document.getElementById('pilihOpsiScreen').style.display = 'flex';
   document.getElementById('opsiPakaiNip').checked = currentUseNip;
   document.getElementById('opsiPassword').checked = !currentUseNip;
   toggleInputNip();
+  tampilkanLayar('pilihOpsiScreen');
 }
 
 function bukaLKH() {
@@ -520,15 +520,13 @@ function bukaLKH() {
     tampilkanLayarTerkunci(currentAkses.alasan);
     return;
   }
-  sembunyikanSemuaLayar();
-  document.getElementById('appContent').style.display = 'block';
+  tampilkanLayar('appContent');
   if (currentAkses) tampilkanStatusAkses(currentAkses);
   loadHarian();
   loadBulanan();
 }
 
 function bukaStatusAkun() {
-  sembunyikanSemuaLayar();
   document.getElementById('statusUsername').innerText = currentUsername || '-';
   document.getElementById('statusCaraProfil').innerText = currentUseNip ? 'Gunakan NIP' : 'Hanya Password (manual)';
   if (currentAkses) {
@@ -541,7 +539,7 @@ function bukaStatusAkun() {
   }
   const pesanWa = encodeURIComponent('Halo, saya mau berlangganan/perpanjang aplikasi LKH. Username saya: ' + (currentUsername || ''));
   document.getElementById('btnHubungiCsStatus').href = 'https://wa.me/' + WA_CS_NUMBER + '?text=' + pesanWa;
-  document.getElementById('statusAkunScreen').style.display = 'flex';
+  tampilkanLayar('statusAkunScreen');
 }
 
 function tampilkanStatusAkses(akses) {
@@ -581,11 +579,10 @@ function logout() {
   currentUsername = null;
   currentUserProfile = null;
   currentAkses = null;
-  sembunyikanSemuaLayar();
   document.getElementById('loginUsername').value = '';
   document.getElementById('loginPassword').value = '';
   sembunyikanAlert('loginAlert');
-  document.getElementById('loginScreen').style.display = 'flex';
+  tampilkanLayar('loginScreen');
 }
 
 function switchToHarian() { document.getElementById('mainReportTitle').innerText = "LAPORAN KINERJA HARIAN"; }
@@ -623,9 +620,6 @@ async function submitData() {
 async function loadHarian() {
   try {
     const data = await callApi('getLKHData', { nip: currentUsername });
-    if (data && data.error && data.error.indexOf === undefined) {
-      // data biasa (array), lanjut normal
-    }
     if (!Array.isArray(data) && data && data.error) {
       tampilkanLayarTerkunci(String(data.error).replace('Terkunci: ', ''));
       return;
