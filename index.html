@@ -9,7 +9,7 @@
   body { background-color: #f4f6f9; font-family: 'Segoe UI', Arial, sans-serif; }
   .card { border-radius: 10px; border: 1px solid #e0e4e8; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .table-custom th { background-color: #f1f3f5; text-align: center; vertical-align: middle; }
-  #appContent, #loginScreen { display: none; }
+  #appContent, #loginScreen, #pilihOpsiScreen, #lockedScreen { display: none; }
   @media print {
     .no-print, .no-print * { display: none !important; }
     body { background-color: white; padding: 0 !important; font-size: 11px; }
@@ -26,7 +26,8 @@
 <body class="p-3 p-md-4">
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuKxo96lbLXPeAcOu4zv50kKh9xj0EXGzkQWpQn9n6C-NZLGmLcqw2zBV9_xPtriSF/exec";
+  const APPS_SCRIPT_URL = "GANTI_DENGAN_URL_WEBAPP_APPS_SCRIPT_KAMU";
+  const WA_CS_NUMBER = "GANTI_DENGAN_NOMOR_WA_CS"; // format: 628xxxxxxxxxx
 </script>
 
 <div id="loadingScreen" class="text-center p-5">
@@ -34,46 +35,89 @@
   <p class="mt-2 text-muted">Memuat...</p>
 </div>
 
-<!-- LAYAR LOGIN -->
-<div id="loginScreen" style="min-height: 80vh;">
-  <div class="d-flex justify-content-center align-items-center h-100">
-    <div class="card p-4" style="max-width: 380px; width: 100%;">
-    <h5 class="fw-bold text-center mb-3">🔑 Masuk Aplikasi LKH/LKB</h5>
+<!-- LAYAR LOGIN / DAFTAR -->
+<div id="loginScreen" class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+  <div class="card p-4" style="max-width: 380px; width: 100%;">
+    <h5 class="fw-bold text-center mb-3">🔑 Aplikasi LKH/LKB</h5>
 
     <ul class="nav nav-pills nav-fill mb-3">
-      <li class="nav-item"><button class="nav-link active" id="tabNip" onclick="gantiTabLogin('nip')">Masuk NIP</button></li>
-      <li class="nav-item"><button class="nav-link" id="tabPw" onclick="gantiTabLogin('pw')">Username/Password</button></li>
+      <li class="nav-item"><button class="nav-link active" id="tabMasuk" onclick="gantiTabLogin('masuk')">Masuk</button></li>
+      <li class="nav-item"><button class="nav-link" id="tabNipCepat" onclick="gantiTabLogin('nipcepat')">Masuk NIP</button></li>
+      <li class="nav-item"><button class="nav-link" id="tabDaftar" onclick="gantiTabLogin('daftar')">Daftar</button></li>
     </ul>
 
-    <div id="formNip">
-      <p class="text-muted small mb-2">Data profil (Nama, NIP, Jabatan, Unit Kerja) otomatis terisi dari database pegawai.</p>
-      <input type="text" id="loginNip" class="form-control mb-2" placeholder="Nomor Induk Pegawai (NIP)" onkeypress="if(event.key==='Enter') prosesLoginNip()">
-      <button id="btnLoginNip" class="btn btn-primary w-100 fw-semibold" onclick="prosesLoginNip()">Masuk</button>
+    <div id="formMasuk">
+      <input type="text" id="loginUsername" class="form-control mb-2" placeholder="Username" onkeypress="if(event.key==='Enter') prosesLogin()">
+      <input type="password" id="loginPassword" class="form-control mb-2" placeholder="Password" onkeypress="if(event.key==='Enter') prosesLogin()">
+      <button id="btnLogin" class="btn btn-primary w-100 fw-semibold" onclick="prosesLogin()">Masuk</button>
     </div>
 
-    <div id="formPw" style="display:none;">
-      <p class="text-muted small mb-2">Data profil diisi manual sendiri (tidak memakai NIP asli). Cocok kalau tidak mau menyetorkan data pegawai.</p>
-      <input type="text" id="loginUsername" class="form-control mb-2" placeholder="Username" onkeypress="if(event.key==='Enter') prosesLoginPw()">
-      <input type="password" id="loginPassword" class="form-control mb-2" placeholder="Password" onkeypress="if(event.key==='Enter') prosesLoginPw()">
-      <button id="btnLoginPw" class="btn btn-primary w-100 fw-semibold mb-2" onclick="prosesLoginPw()">Masuk</button>
-      <div class="text-center small"><a href="#" onclick="toggleDaftar(); return false;">Belum punya akun? Daftar di sini</a></div>
-      <div id="formDaftar" style="display:none;" class="mt-3 border-top pt-3">
-        <input type="text" id="daftarUsername" class="form-control mb-2" placeholder="Buat Username">
-        <input type="password" id="daftarPassword" class="form-control mb-2" placeholder="Buat Password">
-        <button id="btnDaftar" class="btn btn-success w-100" onclick="prosesDaftar()">Daftar & Masuk</button>
-      </div>
+    <div id="formNipCepat" style="display:none;">
+      <p class="text-muted small mb-2">Hanya untuk akun yang sudah menghubungkan NIP saat mendaftar.</p>
+      <input type="text" id="loginNipCepat" class="form-control mb-2" placeholder="NIP" onkeypress="if(event.key==='Enter') prosesLoginNipCepat()">
+      <button id="btnLoginNipCepat" class="btn btn-primary w-100 fw-semibold" onclick="prosesLoginNipCepat()">Masuk</button>
+    </div>
+
+    <div id="formDaftar" style="display:none;">
+      <p class="text-muted small mb-2">Buat username & password untuk akun baru. Trial gratis 7 hari sejak input data pertama.</p>
+      <input type="text" id="daftarUsername" class="form-control mb-2" placeholder="Buat Username">
+      <input type="password" id="daftarPassword" class="form-control mb-2" placeholder="Buat Password">
+      <button id="btnDaftar" class="btn btn-success w-100" onclick="prosesDaftar()">Daftar</button>
     </div>
 
     <div id="loginAlert" class="alert alert-danger small d-none mt-2"></div>
+  </div>
+  </div>
+</div>
+
+<!-- LAYAR PILIH OPSI LOGIN (setelah daftar) -->
+<div id="pilihOpsiScreen" class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+  <div class="card p-4" style="max-width: 420px; width: 100%;">
+    <h5 class="fw-bold text-center mb-2">Pilih Cara Isi Profil</h5>
+    <p class="text-muted small text-center mb-3">Username & password kamu sudah aktif. Sekarang pilih salah satu:</p>
+
+    <div class="form-check border rounded p-3 mb-2">
+      <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPakaiNip" value="nip" checked onchange="toggleInputNip()">
+      <label class="form-check-label fw-semibold" for="opsiPakaiNip">Gunakan NIP</label>
+      <p class="small text-muted mb-2">Profil (Nama, NIP, Jabatan, Unit Kerja) otomatis terisi dari database pegawai. NIP kamu tersimpan di sistem.</p>
+      <input type="text" id="opsiNipInput" class="form-control form-control-sm" placeholder="Masukkan NIP">
     </div>
+
+    <div class="form-check border rounded p-3 mb-3">
+      <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPassword" value="password" onchange="toggleInputNip()">
+      <label class="form-check-label fw-semibold" for="opsiPassword">Hanya Password</label>
+      <p class="small text-muted mb-0">Profil diisi manual sendiri. NIP tidak disetorkan ke sistem.</p>
+    </div>
+
+    <button id="btnSimpanOpsi" class="btn btn-primary w-100 fw-semibold" onclick="simpanOpsiLogin()">Lanjutkan</button>
+    <div id="opsiAlert" class="alert alert-danger small d-none mt-2"></div>
+  </div>
+  </div>
+</div>
+
+<!-- LAYAR TERKUNCI -->
+<div id="lockedScreen" class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+  <div class="card p-4 text-center" style="max-width: 420px; width: 100%;">
+    <h4 class="fw-bold text-danger mb-2">🔒 Akses Terkunci</h4>
+    <p class="text-muted" id="lockedReason">Masa berlaku akun kamu sudah habis.</p>
+    <a id="btnHubungiCs" href="#" target="_blank" class="btn btn-success w-100 mb-2">💬 Hubungi CS untuk Berlangganan</a>
+    <button class="btn btn-outline-secondary w-100" onclick="logout()">Keluar</button>
+  </div>
   </div>
 </div>
 
 <div class="container" id="appContent" style="max-width: 900px;">
 
-  <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+  <div class="d-flex justify-content-between align-items-center mb-2 no-print">
     <h4 class="fw-bold m-0" id="mainReportTitle">LAPORAN KINERJA HARIAN</h4>
     <button class="btn btn-outline-secondary btn-sm" onclick="logout()">Keluar</button>
+  </div>
+
+  <div class="text-center mb-3 no-print">
+    <span id="statusAksesBadge" class="badge bg-info">Memuat status...</span>
   </div>
 
   <div class="card p-3 mb-3 bg-light">
@@ -197,8 +241,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 let currentUserProfile = null;
-let currentNip = null;      // dipakai sebagai "kunci data" (bisa NIP asli atau "pw_username")
+let currentUsername = null;
 let isManualProfile = false;
+let pendingUsername = null; // dipakai saat proses daftar -> pilih opsi
 let dataHarianTerakhir = [];
 let filterHarianMode = 'minggu';
 let filterHarianSebelumPrint = null;
@@ -213,135 +258,188 @@ async function callApi(action, params = {}) {
   return JSON.parse(responseText);
 }
 
-function tampilkanErrorLogin(pesan) {
-  const alertBox = document.getElementById('loginAlert');
-  alertBox.innerText = pesan;
-  alertBox.classList.remove('d-none');
+function tampilkanAlert(elId, pesan) {
+  const el = document.getElementById(elId);
+  el.innerText = pesan;
+  el.classList.remove('d-none');
+}
+function sembunyikanAlert(elId) {
+  document.getElementById(elId).classList.add('d-none');
 }
 
 function gantiTabLogin(mode) {
-  document.getElementById('tabNip').classList.toggle('active', mode === 'nip');
-  document.getElementById('tabPw').classList.toggle('active', mode === 'pw');
-  document.getElementById('formNip').style.display = mode === 'nip' ? 'block' : 'none';
-  document.getElementById('formPw').style.display = mode === 'pw' ? 'block' : 'none';
-  document.getElementById('loginAlert').classList.add('d-none');
-}
-
-function toggleDaftar() {
-  const el = document.getElementById('formDaftar');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  document.getElementById('tabMasuk').classList.toggle('active', mode === 'masuk');
+  document.getElementById('tabNipCepat').classList.toggle('active', mode === 'nipcepat');
+  document.getElementById('tabDaftar').classList.toggle('active', mode === 'daftar');
+  document.getElementById('formMasuk').style.display = mode === 'masuk' ? 'block' : 'none';
+  document.getElementById('formNipCepat').style.display = mode === 'nipcepat' ? 'block' : 'none';
+  document.getElementById('formDaftar').style.display = mode === 'daftar' ? 'block' : 'none';
+  sembunyikanAlert('loginAlert');
 }
 
 window.onload = function() {
   document.getElementById('approvalDate').valueAsDate = new Date();
   document.getElementById('loadingScreen').style.display = 'none';
 
-  const savedKey = localStorage.getItem('lkh_nip');
-  const savedManual = localStorage.getItem('lkh_manual') === '1';
-
-  if (savedKey) {
-    if (savedManual) {
-      masukKeAplikasi(savedKey, true, null);
-    } else {
-      lakukanLoginNipTersimpan(savedKey);
-    }
+  const savedUsername = localStorage.getItem('lkh_username');
+  if (savedUsername) {
+    pulihkanSesi(savedUsername);
   } else {
     document.getElementById('loginScreen').style.display = 'flex';
   }
 };
 
-async function lakukanLoginNipTersimpan(nip) {
+async function pulihkanSesi(username) {
   try {
-    const res = await callApi('login', { nip: nip });
+    const res = await callApi('getAccountStatus', { username });
     if (res.success) {
-      masukKeAplikasi(nip, false, res.profile);
+      masukKeAplikasi(res);
     } else {
-      localStorage.removeItem('lkh_nip');
-      localStorage.removeItem('lkh_manual');
+      localStorage.removeItem('lkh_username');
       document.getElementById('loginScreen').style.display = 'flex';
     }
   } catch (err) {
-    localStorage.removeItem('lkh_nip');
-    localStorage.removeItem('lkh_manual');
+    localStorage.removeItem('lkh_username');
     document.getElementById('loginScreen').style.display = 'flex';
   }
 }
 
-async function prosesLoginNip() {
-  const nip = document.getElementById('loginNip').value.trim();
-  if (!nip) return tampilkanErrorLogin("Masukkan NIP terlebih dahulu!");
+async function prosesLogin() {
+  const u = document.getElementById('loginUsername').value.trim();
+  const p = document.getElementById('loginPassword').value;
+  if (!u || !p) return tampilkanAlert('loginAlert', "Isi username & password.");
 
-  const btn = document.getElementById('btnLoginNip');
+  const btn = document.getElementById('btnLogin');
   btn.disabled = true; btn.innerText = "Memverifikasi...";
   try {
-    const res = await callApi('login', { nip: nip });
+    const res = await callApi('loginAccount', { username: u, password: p });
     btn.disabled = false; btn.innerText = "Masuk";
     if (res.success) {
-      localStorage.setItem('lkh_nip', nip);
-      localStorage.setItem('lkh_manual', '0');
-      masukKeAplikasi(nip, false, res.profile);
+      localStorage.setItem('lkh_username', u);
+      masukKeAplikasi(res);
     } else {
-      tampilkanErrorLogin(res.error || "NIP tidak ditemukan.");
+      tampilkanAlert('loginAlert', res.error || "Login gagal.");
     }
   } catch (err) {
     btn.disabled = false; btn.innerText = "Masuk";
-    tampilkanErrorLogin("Error koneksi: " + err.message);
+    tampilkanAlert('loginAlert', "Error koneksi: " + err.message);
   }
 }
 
-async function prosesLoginPw() {
-  const u = document.getElementById('loginUsername').value.trim();
-  const p = document.getElementById('loginPassword').value;
-  if (!u || !p) return tampilkanErrorLogin("Isi username & password.");
+async function prosesLoginNipCepat() {
+  const nip = document.getElementById('loginNipCepat').value.trim();
+  if (!nip) return tampilkanAlert('loginAlert', "Masukkan NIP.");
 
-  const btn = document.getElementById('btnLoginPw');
+  const btn = document.getElementById('btnLoginNipCepat');
   btn.disabled = true; btn.innerText = "Memverifikasi...";
   try {
-    const res = await callApi('loginPassword', { username: u, password: p });
+    const res = await callApi('loginByNip', { nip });
     btn.disabled = false; btn.innerText = "Masuk";
     if (res.success) {
-      localStorage.setItem('lkh_nip', res.userKey);
-      localStorage.setItem('lkh_manual', '1');
-      masukKeAplikasi(res.userKey, true, null);
+      localStorage.setItem('lkh_username', res.username);
+      masukKeAplikasi(res);
     } else {
-      tampilkanErrorLogin(res.error || "Username/password salah.");
+      tampilkanAlert('loginAlert', res.error || "NIP tidak dikenali.");
     }
   } catch (err) {
     btn.disabled = false; btn.innerText = "Masuk";
-    tampilkanErrorLogin("Error koneksi: " + err.message);
+    tampilkanAlert('loginAlert', "Error koneksi: " + err.message);
   }
 }
 
 async function prosesDaftar() {
   const u = document.getElementById('daftarUsername').value.trim();
   const p = document.getElementById('daftarPassword').value;
-  if (!u || !p) return tampilkanErrorLogin("Isi username & password baru.");
+  if (!u || !p) return tampilkanAlert('loginAlert', "Isi username & password baru.");
 
   const btn = document.getElementById('btnDaftar');
   btn.disabled = true; btn.innerText = "Mendaftarkan...";
   try {
-    const res = await callApi('registerPassword', { username: u, password: p });
-    btn.disabled = false; btn.innerText = "Daftar & Masuk";
+    const res = await callApi('registerAccount', { username: u, password: p });
+    btn.disabled = false; btn.innerText = "Daftar";
     if (res.success) {
-      localStorage.setItem('lkh_nip', res.userKey);
-      localStorage.setItem('lkh_manual', '1');
-      masukKeAplikasi(res.userKey, true, null);
+      pendingUsername = u;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('pilihOpsiScreen').style.display = 'flex';
+      toggleInputNip();
     } else {
-      tampilkanErrorLogin(res.error || "Gagal mendaftar.");
+      tampilkanAlert('loginAlert', res.error || "Gagal mendaftar.");
     }
   } catch (err) {
-    btn.disabled = false; btn.innerText = "Daftar & Masuk";
-    tampilkanErrorLogin("Error koneksi: " + err.message);
+    btn.disabled = false; btn.innerText = "Daftar";
+    tampilkanAlert('loginAlert', "Error koneksi: " + err.message);
   }
 }
 
-function masukKeAplikasi(key, manual, profile) {
-  currentNip = key;
-  isManualProfile = manual;
-  currentUserProfile = profile;
+function toggleInputNip() {
+  const pakaiNip = document.getElementById('opsiPakaiNip').checked;
+  document.getElementById('opsiNipInput').style.display = pakaiNip ? 'block' : 'none';
+}
+
+async function simpanOpsiLogin() {
+  const pakaiNip = document.getElementById('opsiPakaiNip').checked;
+  const nip = document.getElementById('opsiNipInput').value.trim();
+  if (pakaiNip && !nip) return tampilkanAlert('opsiAlert', "Masukkan NIP kamu.");
+
+  const btn = document.getElementById('btnSimpanOpsi');
+  btn.disabled = true; btn.innerText = "Menyimpan...";
+  try {
+    const res = await callApi('setLoginOption', { username: pendingUsername, useNip: pakaiNip, nip: pakaiNip ? nip : '' });
+    if (res.success) {
+      localStorage.setItem('lkh_username', pendingUsername);
+      const statusRes = await callApi('getAccountStatus', { username: pendingUsername });
+      btn.disabled = false; btn.innerText = "Lanjutkan";
+      if (statusRes.success) {
+        masukKeAplikasi(statusRes);
+      } else {
+        tampilkanAlert('opsiAlert', statusRes.error);
+      }
+    } else {
+      btn.disabled = false; btn.innerText = "Lanjutkan";
+      tampilkanAlert('opsiAlert', res.error || "Gagal menyimpan opsi.");
+    }
+  } catch (err) {
+    btn.disabled = false; btn.innerText = "Lanjutkan";
+    tampilkanAlert('opsiAlert', "Error koneksi: " + err.message);
+  }
+}
+
+function tampilkanStatusAkses(akses) {
+  const badge = document.getElementById('statusAksesBadge');
+  if (akses.status === 'trial') {
+    badge.className = 'badge bg-warning text-dark';
+    badge.innerText = '⏳ Trial — berlaku sampai ' + akses.berlakuSampai;
+  } else if (akses.status === 'aktif') {
+    badge.className = 'badge bg-success';
+    badge.innerText = '✅ Aktif — berlaku sampai ' + akses.berlakuSampai;
+  } else {
+    badge.className = 'badge bg-secondary';
+    badge.innerText = 'Status tidak diketahui';
+  }
+}
+
+function tampilkanLayarTerkunci(alasan) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('pilihOpsiScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'none';
+  document.getElementById('lockedReason').innerText = alasan || 'Masa berlaku akun kamu sudah habis.';
+  document.getElementById('btnHubungiCs').href = 'https://wa.me/' + WA_CS_NUMBER + '?text=' + encodeURIComponent('Halo, saya mau berlangganan aplikasi LKH. Username saya: ' + (currentUsername || ''));
+  document.getElementById('lockedScreen').style.display = 'flex';
+}
+
+function masukKeAplikasi(res) {
+  currentUsername = res.username;
+  isManualProfile = !res.useNip;
+  currentUserProfile = res.profile;
+
+  if (res.akses && res.akses.status === 'terkunci') {
+    tampilkanLayarTerkunci(res.akses.alasan);
+    return;
+  }
+  if (res.akses) tampilkanStatusAkses(res.akses);
 
   const fields = ['empName', 'empNip', 'empPosition', 'empUnit'];
-  if (manual) {
+  if (isManualProfile) {
     fields.forEach(id => {
       const el = document.getElementById(id);
       el.removeAttribute('readonly');
@@ -351,10 +449,12 @@ function masukKeAplikasi(key, manual, profile) {
     });
   } else {
     fields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
-    document.getElementById('empName').value = profile.nama;
-    document.getElementById('empNip').value = profile.nip;
-    document.getElementById('empPosition').value = profile.jabatan;
-    document.getElementById('empUnit').value = profile.unitKerja;
+    if (res.profile) {
+      document.getElementById('empName').value = res.profile.nama;
+      document.getElementById('empNip').value = res.profile.nip;
+      document.getElementById('empPosition').value = res.profile.jabatan;
+      document.getElementById('empUnit').value = res.profile.unitKerja;
+    }
   }
 
   ['signerName','signerNip','signerJabatan','signerTempat'].forEach(id => {
@@ -363,6 +463,8 @@ function masukKeAplikasi(key, manual, profile) {
   });
 
   document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('pilihOpsiScreen').style.display = 'none';
+  document.getElementById('lockedScreen').style.display = 'none';
   document.getElementById('appContent').style.display = 'block';
   loadHarian();
   loadBulanan();
@@ -380,7 +482,6 @@ function simpanHistori(fieldId, datalistId) {
   }
   muatDatalistHistori(fieldId, datalistId);
 }
-
 function muatDatalistHistori(fieldId, datalistId) {
   const arr = JSON.parse(localStorage.getItem('hist_' + fieldId) || '[]');
   const dl = document.getElementById(datalistId);
@@ -388,16 +489,15 @@ function muatDatalistHistori(fieldId, datalistId) {
 }
 
 function logout() {
-  localStorage.removeItem('lkh_nip');
-  localStorage.removeItem('lkh_manual');
-  currentNip = null;
+  localStorage.removeItem('lkh_username');
+  currentUsername = null;
   currentUserProfile = null;
   document.getElementById('appContent').style.display = 'none';
+  document.getElementById('lockedScreen').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loginNip').value = '';
   document.getElementById('loginUsername').value = '';
   document.getElementById('loginPassword').value = '';
-  document.getElementById('loginAlert').classList.add('d-none');
+  sembunyikanAlert('loginAlert');
 }
 
 function switchToHarian() { document.getElementById('mainReportTitle').innerText = "LAPORAN KINERJA HARIAN"; }
@@ -412,7 +512,7 @@ async function submitData() {
   btn.innerText = "Memproses AI...";
 
   try {
-    const res = await callApi('processVoiceOrText', { userText: text, nip: currentNip });
+    const res = await callApi('processVoiceOrText', { userText: text, nip: currentUsername });
     btn.disabled = false;
     btn.innerText = "Proses & Simpan";
     if (res.success) {
@@ -420,6 +520,8 @@ async function submitData() {
       loadHarian();
       loadBulanan();
       alert("Data berhasil dicatat!");
+    } else if (res.error && res.error.startsWith('Terkunci')) {
+      tampilkanLayarTerkunci(res.error.replace('Terkunci: ', ''));
     } else {
       alert("Gagal: " + res.error);
     }
@@ -432,7 +534,11 @@ async function submitData() {
 
 async function loadHarian() {
   try {
-    const data = await callApi('getLKHData', { nip: currentNip });
+    const data = await callApi('getLKHData', { nip: currentUsername });
+    if (data && data.error && data.error.startsWith && data.error.startsWith('Terkunci')) {
+      tampilkanLayarTerkunci(data.error.replace('Terkunci: ', ''));
+      return;
+    }
     dataHarianTerakhir = data || [];
     renderTabelHarian();
   } catch (err) {
@@ -501,7 +607,7 @@ function gantiFilterHarian(mode) {
 
 async function loadBulanan() {
   try {
-    const data = await callApi('getLKBRecap', { nip: currentNip });
+    const data = await callApi('getLKBRecap', { nip: currentUsername });
     const tbody = document.getElementById('tableBulananBody');
     tbody.innerHTML = "";
     if (!data || data.length === 0) {
@@ -536,7 +642,7 @@ async function hapusTerpilih() {
   btn.disabled = true;
   btn.innerText = "Menghapus...";
   try {
-    const res = await callApi('deleteEntries', { ids: ids, nip: currentNip });
+    const res = await callApi('deleteEntries', { ids: ids, nip: currentUsername });
     if (res.success) {
       document.getElementById('checkAllHarian').checked = false;
       loadHarian();
