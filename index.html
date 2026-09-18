@@ -9,7 +9,7 @@
   body { background-color: #f4f6f9; font-family: 'Segoe UI', Arial, sans-serif; }
   .card { border-radius: 10px; border: 1px solid #e0e4e8; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .table-custom th { background-color: #f1f3f5; text-align: center; vertical-align: middle; }
-  #appContent, #loginScreen, #pilihOpsiScreen, #lockedScreen { display: none; }
+  #appContent, #loginScreen, #pilihOpsiScreen, #lockedScreen, #dashboardScreen, #statusAkunScreen { display: none; }
   @media print {
     .no-print, .no-print * { display: none !important; }
     body { background-color: white; padding: 0 !important; font-size: 11px; }
@@ -26,8 +26,8 @@
 <body class="p-3 p-md-4">
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuKxo96lbLXPeAcOu4zv50kKh9xj0EXGzkQWpQn9n6C-NZLGmLcqw2zBV9_xPtriSF/exec";
-  const WA_CS_NUMBER = "6285696454569"; // format: 628xxxxxxxxxx
+  const APPS_SCRIPT_URL = "GANTI_DENGAN_URL_WEBAPP_APPS_SCRIPT_KAMU";
+  const WA_CS_NUMBER = "GANTI_DENGAN_NOMOR_WA_CS"; // format: 628xxxxxxxxxx
 </script>
 
 <div id="loadingScreen" class="text-center p-5">
@@ -35,8 +35,8 @@
   <p class="mt-2 text-muted">Memuat...</p>
 </div>
 
-<!-- LAYAR LOGIN / DAFTAR -->
-<div id="loginScreen" class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+<!-- LAYAR LOGIN / DAFTAR (halaman pertama pengunjung) -->
+<div id="loginScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
   <div class="d-flex justify-content-center align-items-center h-100 w-100">
   <div class="card p-4" style="max-width: 380px; width: 100%;">
     <h5 class="fw-bold text-center mb-3">🔑 Aplikasi LKH/LKB</h5>
@@ -54,7 +54,7 @@
     </div>
 
     <div id="formNipCepat" style="display:none;">
-      <p class="text-muted small mb-2">Hanya untuk akun yang sudah menghubungkan NIP saat mendaftar.</p>
+      <p class="text-muted small mb-2">Hanya untuk akun yang sudah menghubungkan NIP.</p>
       <input type="text" id="loginNipCepat" class="form-control mb-2" placeholder="NIP" onkeypress="if(event.key==='Enter') prosesLoginNipCepat()">
       <button id="btnLoginNipCepat" class="btn btn-primary w-100 fw-semibold" onclick="prosesLoginNipCepat()">Masuk</button>
     </div>
@@ -71,12 +71,28 @@
   </div>
 </div>
 
-<!-- LAYAR PILIH OPSI LOGIN (setelah daftar) -->
-<div id="pilihOpsiScreen" class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+<!-- LAYAR DASHBOARD MENU (setelah berhasil login) -->
+<div id="dashboardScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+  <div class="card p-4" style="max-width: 420px; width: 100%;">
+    <h5 class="fw-bold text-center mb-1">Selamat datang</h5>
+    <p class="text-muted text-center small mb-3" id="dashboardUsername">-</p>
+
+    <button class="btn btn-outline-primary w-100 mb-2 py-2 text-start" onclick="bukaOpsiDariDashboard()">1️⃣ Pilih Cara Isi Profil</button>
+    <button class="btn btn-primary w-100 mb-2 py-2 text-start" onclick="bukaLKH()">2️⃣ Pengisian LKH/LKB</button>
+    <button class="btn btn-outline-secondary w-100 mb-3 py-2 text-start" onclick="bukaStatusAkun()">3️⃣ Status Akun</button>
+
+    <button class="btn btn-link w-100 text-danger" onclick="logout()">Keluar</button>
+  </div>
+  </div>
+</div>
+
+<!-- LAYAR PILIH OPSI LOGIN -->
+<div id="pilihOpsiScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
   <div class="d-flex justify-content-center align-items-center h-100 w-100">
   <div class="card p-4" style="max-width: 420px; width: 100%;">
     <h5 class="fw-bold text-center mb-2">Pilih Cara Isi Profil</h5>
-    <p class="text-muted small text-center mb-3">Username & password kamu sudah aktif. Sekarang pilih salah satu:</p>
+    <p class="text-muted small text-center mb-3">Pilih salah satu opsi di bawah ini:</p>
 
     <div class="form-check border rounded p-3 mb-2">
       <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPakaiNip" value="nip" checked onchange="toggleInputNip()">
@@ -91,14 +107,29 @@
       <p class="small text-muted mb-0">Profil diisi manual sendiri. NIP tidak disetorkan ke sistem.</p>
     </div>
 
-    <button id="btnSimpanOpsi" class="btn btn-primary w-100 fw-semibold" onclick="simpanOpsiLogin()">Lanjutkan</button>
+    <button id="btnSimpanOpsi" class="btn btn-primary w-100 fw-semibold mb-2" onclick="simpanOpsiLogin()">Simpan</button>
+    <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">← Kembali</button>
     <div id="opsiAlert" class="alert alert-danger small d-none mt-2"></div>
   </div>
   </div>
 </div>
 
+<!-- LAYAR STATUS AKUN -->
+<div id="statusAkunScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="d-flex justify-content-center align-items-center h-100 w-100">
+  <div class="card p-4" style="max-width: 420px; width: 100%;">
+    <h5 class="fw-bold text-center mb-3">Status Akun</h5>
+    <div class="mb-2 d-flex"><strong style="width:140px;">Username</strong><span>: <span id="statusUsername">-</span></span></div>
+    <div class="mb-2 d-flex"><strong style="width:140px;">Cara Isi Profil</strong><span>: <span id="statusCaraProfil">-</span></span></div>
+    <div class="mb-3 d-flex"><strong style="width:140px;">Status</strong><span>: <span id="statusAksesText">-</span></span></div>
+    <a id="btnHubungiCsStatus" href="#" target="_blank" class="btn btn-success w-100 mb-2">💬 Hubungi CS / Perpanjang</a>
+    <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">← Kembali</button>
+  </div>
+  </div>
+</div>
+
 <!-- LAYAR TERKUNCI -->
-<div id="lockedScreen" class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+<div id="lockedScreen" class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
   <div class="d-flex justify-content-center align-items-center h-100 w-100">
   <div class="card p-4 text-center" style="max-width: 420px; width: 100%;">
     <h4 class="fw-bold text-danger mb-2">🔒 Akses Terkunci</h4>
@@ -113,7 +144,10 @@
 
   <div class="d-flex justify-content-between align-items-center mb-2 no-print">
     <h4 class="fw-bold m-0" id="mainReportTitle">LAPORAN KINERJA HARIAN</h4>
-    <button class="btn btn-outline-secondary btn-sm" onclick="logout()">Keluar</button>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm" onclick="backToDashboard()">☰ Menu</button>
+      <button class="btn btn-outline-danger btn-sm" onclick="logout()">Keluar</button>
+    </div>
   </div>
 
   <div class="text-center mb-3 no-print">
@@ -243,7 +277,9 @@
 let currentUserProfile = null;
 let currentUsername = null;
 let isManualProfile = false;
-let pendingUsername = null; // dipakai saat proses daftar -> pilih opsi
+let pendingUsername = null;
+let currentAkses = null;
+let currentUseNip = false;
 let dataHarianTerakhir = [];
 let filterHarianMode = 'minggu';
 let filterHarianSebelumPrint = null;
@@ -267,6 +303,12 @@ function sembunyikanAlert(elId) {
   document.getElementById(elId).classList.add('d-none');
 }
 
+function sembunyikanSemuaLayar() {
+  ['loginScreen','dashboardScreen','pilihOpsiScreen','statusAkunScreen','lockedScreen','appContent'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+}
+
 function gantiTabLogin(mode) {
   document.getElementById('tabMasuk').classList.toggle('active', mode === 'masuk');
   document.getElementById('tabNipCepat').classList.toggle('active', mode === 'nipcepat');
@@ -285,6 +327,7 @@ window.onload = function() {
   if (savedUsername) {
     pulihkanSesi(savedUsername);
   } else {
+    sembunyikanSemuaLayar();
     document.getElementById('loginScreen').style.display = 'flex';
   }
 };
@@ -296,10 +339,12 @@ async function pulihkanSesi(username) {
       masukKeAplikasi(res);
     } else {
       localStorage.removeItem('lkh_username');
+      sembunyikanSemuaLayar();
       document.getElementById('loginScreen').style.display = 'flex';
     }
   } catch (err) {
     localStorage.removeItem('lkh_username');
+    sembunyikanSemuaLayar();
     document.getElementById('loginScreen').style.display = 'flex';
   }
 }
@@ -359,7 +404,7 @@ async function prosesDaftar() {
     btn.disabled = false; btn.innerText = "Daftar";
     if (res.success) {
       pendingUsername = u;
-      document.getElementById('loginScreen').style.display = 'none';
+      sembunyikanSemuaLayar();
       document.getElementById('pilihOpsiScreen').style.display = 'flex';
       toggleInputNip();
     } else {
@@ -388,55 +433,41 @@ async function simpanOpsiLogin() {
     if (res.success) {
       localStorage.setItem('lkh_username', pendingUsername);
       const statusRes = await callApi('getAccountStatus', { username: pendingUsername });
-      btn.disabled = false; btn.innerText = "Lanjutkan";
+      btn.disabled = false; btn.innerText = "Simpan";
       if (statusRes.success) {
         masukKeAplikasi(statusRes);
       } else {
         tampilkanAlert('opsiAlert', statusRes.error);
       }
     } else {
-      btn.disabled = false; btn.innerText = "Lanjutkan";
+      btn.disabled = false; btn.innerText = "Simpan";
       tampilkanAlert('opsiAlert', res.error || "Gagal menyimpan opsi.");
     }
   } catch (err) {
-    btn.disabled = false; btn.innerText = "Lanjutkan";
+    btn.disabled = false; btn.innerText = "Simpan";
     tampilkanAlert('opsiAlert', "Error koneksi: " + err.message);
   }
 }
 
-function tampilkanStatusAkses(akses) {
-  const badge = document.getElementById('statusAksesBadge');
-  if (akses.status === 'trial') {
-    badge.className = 'badge bg-warning text-dark';
-    badge.innerText = '⏳ Trial — berlaku sampai ' + akses.berlakuSampai;
-  } else if (akses.status === 'aktif') {
-    badge.className = 'badge bg-success';
-    badge.innerText = '✅ Aktif — berlaku sampai ' + akses.berlakuSampai;
-  } else {
-    badge.className = 'badge bg-secondary';
-    badge.innerText = 'Status tidak diketahui';
-  }
-}
-
 function tampilkanLayarTerkunci(alasan) {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('pilihOpsiScreen').style.display = 'none';
-  document.getElementById('appContent').style.display = 'none';
+  sembunyikanSemuaLayar();
   document.getElementById('lockedReason').innerText = alasan || 'Masa berlaku akun kamu sudah habis.';
-  document.getElementById('btnHubungiCs').href = 'https://wa.me/' + WA_CS_NUMBER + '?text=' + encodeURIComponent('Halo, saya mau berlangganan aplikasi LKH. Username saya: ' + (currentUsername || ''));
+  const pesanWa = encodeURIComponent('Halo, saya mau berlangganan aplikasi LKH. Username saya: ' + (currentUsername || ''));
+  document.getElementById('btnHubungiCs').href = 'https://wa.me/' + WA_CS_NUMBER + '?text=' + pesanWa;
   document.getElementById('lockedScreen').style.display = 'flex';
 }
 
 function masukKeAplikasi(res) {
   currentUsername = res.username;
+  currentUseNip = !!res.useNip;
   isManualProfile = !res.useNip;
   currentUserProfile = res.profile;
+  currentAkses = res.akses;
 
   if (res.akses && res.akses.status === 'terkunci') {
     tampilkanLayarTerkunci(res.akses.alasan);
     return;
   }
-  if (res.akses) tampilkanStatusAkses(res.akses);
 
   const fields = ['empName', 'empNip', 'empPosition', 'empUnit'];
   if (isManualProfile) {
@@ -462,12 +493,69 @@ function masukKeAplikasi(res) {
     document.getElementById(id).onblur = () => simpanHistori(id, 'dl' + id.charAt(0).toUpperCase() + id.slice(1));
   });
 
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('pilihOpsiScreen').style.display = 'none';
-  document.getElementById('lockedScreen').style.display = 'none';
+  tampilkanDashboard();
+}
+
+function tampilkanDashboard() {
+  sembunyikanSemuaLayar();
+  document.getElementById('dashboardUsername').innerText = 'Masuk sebagai: ' + currentUsername;
+  document.getElementById('dashboardScreen').style.display = 'flex';
+}
+
+function backToDashboard() {
+  tampilkanDashboard();
+}
+
+function bukaOpsiDariDashboard() {
+  pendingUsername = currentUsername;
+  sembunyikanSemuaLayar();
+  document.getElementById('pilihOpsiScreen').style.display = 'flex';
+  document.getElementById('opsiPakaiNip').checked = currentUseNip;
+  document.getElementById('opsiPassword').checked = !currentUseNip;
+  toggleInputNip();
+}
+
+function bukaLKH() {
+  if (currentAkses && currentAkses.status === 'terkunci') {
+    tampilkanLayarTerkunci(currentAkses.alasan);
+    return;
+  }
+  sembunyikanSemuaLayar();
   document.getElementById('appContent').style.display = 'block';
+  if (currentAkses) tampilkanStatusAkses(currentAkses);
   loadHarian();
   loadBulanan();
+}
+
+function bukaStatusAkun() {
+  sembunyikanSemuaLayar();
+  document.getElementById('statusUsername').innerText = currentUsername || '-';
+  document.getElementById('statusCaraProfil').innerText = currentUseNip ? 'Gunakan NIP' : 'Hanya Password (manual)';
+  if (currentAkses) {
+    let teks = '-';
+    if (currentAkses.status === 'trial') teks = 'Trial — berlaku sampai ' + currentAkses.berlakuSampai;
+    else if (currentAkses.status === 'aktif') teks = 'Aktif — berlaku sampai ' + currentAkses.berlakuSampai;
+    else if (currentAkses.status === 'terkunci') teks = 'Terkunci — ' + currentAkses.alasan;
+    else teks = 'Trial belum dimulai (belum ada input data)';
+    document.getElementById('statusAksesText').innerText = teks;
+  }
+  const pesanWa = encodeURIComponent('Halo, saya mau berlangganan/perpanjang aplikasi LKH. Username saya: ' + (currentUsername || ''));
+  document.getElementById('btnHubungiCsStatus').href = 'https://wa.me/' + WA_CS_NUMBER + '?text=' + pesanWa;
+  document.getElementById('statusAkunScreen').style.display = 'flex';
+}
+
+function tampilkanStatusAkses(akses) {
+  const badge = document.getElementById('statusAksesBadge');
+  if (akses.status === 'trial') {
+    badge.className = 'badge bg-warning text-dark';
+    badge.innerText = '⏳ Trial — berlaku sampai ' + akses.berlakuSampai;
+  } else if (akses.status === 'aktif') {
+    badge.className = 'badge bg-success';
+    badge.innerText = '✅ Aktif — berlaku sampai ' + akses.berlakuSampai;
+  } else {
+    badge.className = 'badge bg-secondary';
+    badge.innerText = 'Status tidak diketahui';
+  }
 }
 
 function simpanHistori(fieldId, datalistId) {
@@ -492,12 +580,12 @@ function logout() {
   localStorage.removeItem('lkh_username');
   currentUsername = null;
   currentUserProfile = null;
-  document.getElementById('appContent').style.display = 'none';
-  document.getElementById('lockedScreen').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
+  currentAkses = null;
+  sembunyikanSemuaLayar();
   document.getElementById('loginUsername').value = '';
   document.getElementById('loginPassword').value = '';
   sembunyikanAlert('loginAlert');
+  document.getElementById('loginScreen').style.display = 'flex';
 }
 
 function switchToHarian() { document.getElementById('mainReportTitle').innerText = "LAPORAN KINERJA HARIAN"; }
@@ -520,7 +608,7 @@ async function submitData() {
       loadHarian();
       loadBulanan();
       alert("Data berhasil dicatat!");
-    } else if (res.error && res.error.startsWith('Terkunci')) {
+    } else if (res.error && res.error.indexOf('Terkunci') === 0) {
       tampilkanLayarTerkunci(res.error.replace('Terkunci: ', ''));
     } else {
       alert("Gagal: " + res.error);
@@ -535,8 +623,11 @@ async function submitData() {
 async function loadHarian() {
   try {
     const data = await callApi('getLKHData', { nip: currentUsername });
-    if (data && data.error && data.error.startsWith && data.error.startsWith('Terkunci')) {
-      tampilkanLayarTerkunci(data.error.replace('Terkunci: ', ''));
+    if (data && data.error && data.error.indexOf === undefined) {
+      // data biasa (array), lanjut normal
+    }
+    if (!Array.isArray(data) && data && data.error) {
+      tampilkanLayarTerkunci(String(data.error).replace('Terkunci: ', ''));
       return;
     }
     dataHarianTerakhir = data || [];
