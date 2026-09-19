@@ -461,24 +461,32 @@ function toggleInputNip() {
 
 async function simpanOpsiLogin() {
   const pakaiNip = document.getElementById('opsiPakaiNip').checked;
-  const nip = document.getElementById('opsiNipInput').value.trim();
-  if (pakaiNip && !nip) return tampilkanAlert('opsiAlert', "Masukkan NIP kamu.");
+  let profileData = {};
+  if (pakaiNip) {
+    profileData = {
+      namaLengkap: document.getElementById('opsiNamaLengkap').value.trim(),
+      nip: document.getElementById('opsiNipInput').value.trim(),
+      jabatan: document.getElementById('opsiJabatan').value.trim(),
+      unitKerja: document.getElementById('opsiUnitKerja').value.trim(),
+      signerJabatan: document.getElementById('opsiSignerJabatan').value.trim(),
+      signerName: document.getElementById('opsiSignerName').value.trim(),
+      signerNip: document.getElementById('opsiSignerNip').value.trim(),
+      signerTempat: document.getElementById('opsiSignerTempat').value.trim()
+    };
+    if (!profileData.nip || !profileData.namaLengkap) return tampilkanAlert('opsiAlert', "Lengkapi Nama dan NIP minimal.");
+  }
 
   const btn = document.getElementById('btnSimpanOpsi');
   btn.disabled = true; btn.innerText = "Menyimpan...";
   try {
-    const res = await callApi('setLoginOption', { username: pendingUsername, useNip: pakaiNip, nip: pakaiNip ? nip : '' });
+    const res = await callApi('setLoginOption', { username: pendingUsername, useNip: pakaiNip, profileData });
+    btn.disabled = false; btn.innerText = "Simpan";
     if (res.success) {
       localStorage.setItem('lkh_username', pendingUsername);
       const statusRes = await callApi('getAccountStatus', { username: pendingUsername });
-      btn.disabled = false; btn.innerText = "Simpan";
-      if (statusRes.success) {
-        masukKeAplikasi(statusRes);
-      } else {
-        tampilkanAlert('opsiAlert', statusRes.error);
-      }
+      if (statusRes.success) masukKeAplikasi(statusRes);
+      else tampilkanAlert('opsiAlert', statusRes.error);
     } else {
-      btn.disabled = false; btn.innerText = "Simpan";
       tampilkanAlert('opsiAlert', res.error || "Gagal menyimpan opsi.");
     }
   } catch (err) {
@@ -524,7 +532,13 @@ function masukKeAplikasi(res) {
       document.getElementById('empUnit').value = res.profile.unitKerja;
     }
   }
-
+  if (res.useNip && res.signer) {
+  document.getElementById('signerJabatan').value = res.signer.jabatan || '';
+  document.getElementById('signerName').value = res.signer.name || '';
+  document.getElementById('signerNip').value = res.signer.nip || '';
+  document.getElementById('signerTempat').value = res.signer.tempat || '';
+    }
+  
   ['signerName','signerNip','signerJabatan','signerTempat'].forEach(id => {
     muatDatalistHistori(id, 'dl' + id.charAt(0).toUpperCase() + id.slice(1));
     document.getElementById(id).onblur = () => simpanHistori(id, 'dl' + id.charAt(0).toUpperCase() + id.slice(1));
