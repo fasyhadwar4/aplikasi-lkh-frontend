@@ -132,9 +132,23 @@
 <div id="statusAkunScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 420px; width: 100%;">
     <h5 class="fw-bold text-center mb-3">Status Akun</h5>
-    <div class="mb-2 d-flex"><strong style="width:140px;">Username</strong><span>: <span id="statusUsername">-</span></span></div>
-    <div class="mb-2 d-flex"><strong style="width:140px;">Cara Isi Profil</strong><span>: <span id="statusCaraProfil">-</span></span></div>
-    <div class="mb-3 d-flex"><strong style="width:140px;">Status</strong><span>: <span id="statusAksesText">-</span></span></div>
+    <table class="info-table">
+      <tr>
+        <td class="label">Username</td>
+        <td class="separator">:</td>
+        <td class="content"><span id="statusUsername">-</span></td>
+      </tr>
+      <tr>
+        <td class="label">Cara Isi Profil</td>
+        <td class="separator">:</td>
+        <td class="content"><span id="statusCaraProfil">-</span></td>
+      </tr>
+      <tr>
+        <td class="label">Status</td>
+        <td class="separator">:</td>
+        <td class="content"><span id="statusAksesText">-</span></td>
+      </tr>
+    </table>
     <a id="btnHubungiCsStatus" href="#" target="_blank" class="btn btn-success w-100 mb-2">💬 Hubungi CS / Perpanjang</a>
     <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">← Kembali</button>
   </div>
