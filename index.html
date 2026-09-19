@@ -30,6 +30,24 @@
     width: 15px;
   }
   @media print {
+  /* 1. Sembunyikan elemen tombol yang diberi class no-print */
+  .no-print, .no-print * { 
+    display: none !important; 
+  }
+
+  /* 2. Ubah flexbox header agar kontennya ke tengah */
+  .d-flex.justify-content-between {
+    justify-content: center !important;
+  }
+
+  /* 3. Atur judul dan subjudul agar teksnya rata tengah */
+  #mainReportTitle, 
+  #mainReportMonth {
+    text-align: center !important;
+    width: 100% !important;
+  }
+  
+  @media print {
     .no-print, .no-print * { display: none !important; }
     body { background-color: white; padding: 0 !important; font-size: 11px; }
     .card { border: none !important; box-shadow: none !important; }
