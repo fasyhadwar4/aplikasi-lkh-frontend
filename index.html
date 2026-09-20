@@ -30,39 +30,63 @@
     width: 15px;
   }
   @media print {
-  /* 1. Sembunyikan elemen tombol yang diberi class no-print */
+  /* 1. Sembunyikan elemen non-cetak (Tombol Menu & Keluar) */
   .no-print, .no-print * { 
     display: none !important; 
   }
 
-  /* 2. Ubah flexbox header agar kontennya ke tengah */
+  /* 2. Pengaturan halaman dasar */
+  body { 
+    background-color: white !important; 
+    padding: 0 !important; 
+    font-size: 11px !important; 
+  }
+
+  .card { 
+    border: none !important; 
+    box-shadow: none !important; 
+    padding: 0 !important;
+    margin-bottom: 5px !important;
+  }
+
+  table { 
+    font-size: 10px !important; 
+  }
+
+  #appContent, .container { 
+    max-width: 100% !important; 
+    width: 100% !important; 
+    margin: 0 !important; 
+    padding: 0 !important; 
+  }
+
+  /* 3. Membuat Judul & Subjudul Rata Tengah */
   .d-flex.justify-content-between {
     justify-content: center !important;
   }
 
-  /* 3. Atur judul dan subjudul agar teksnya rata tengah */
   #mainReportTitle, 
-  #mainReportMonth {
+  #mainReportMonth,
+  h1, h2, h3, .header-title {
     text-align: center !important;
     width: 100% !important;
   }
-  
-  @media print {
-    .no-print, .no-print * { display: none !important; }
-    body { background-color: white; padding: 0 !important; font-size: 11px; }
-    .card { border: none !important; box-shadow: none !important; }
-    table { font-size: 10px; }
-    #appContent, .container { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+
+  /* 4. Merapatkan jarak antarbaris data pegawai */
+  .profile-item,
+  .d-flex.align-items-center {
+    margin-bottom: 1px !important; /* Nilai kecil agar baris sangat rapat */
+    line-height: 1.1 !important;
   }
-  @media (max-width: 480px) {
-    #harian table.table-custom { font-size: 0.68rem; }
-    #harian table.table-custom th, #harian table.table-custom td { padding: 3px 2px !important; }
-  }
-  @media print {
+
+  /* 5. Menghilangkan border input & merapatkan ukuran font/padding */
   #empName, #empNip, #empPosition, #empUnit {
     border: none !important;
     background: transparent !important;
     padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: unset !important;
     box-shadow: none !important;
     font-size: 11px !important;
   }
