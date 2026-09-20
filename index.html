@@ -95,13 +95,15 @@
     font-size: 11px !important;
   }
 
-    .kolom-kanan-ttd {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important; /* Membuat isi teks di dalamnya rata kiri */
-    margin-left: auto !important;       /* Mendorong seluruh blok ke pojok kanan */
-    width: fit-content !important;        /* Lebar menyesuaikan isi teks */
-    padding-left: 0 !important;
+    .ttd-kiri {
+    text-align: left !important;
+    width: 45% !important;
+  }
+
+  .ttd-kanan {
+    text-align: left !important; /* Semua teks di dalamnya otomatis rata kiri & sejajar */
+    width: 220px !important;     /* Menentukan lebar tetap agar lurus tegak */
+    margin-left: auto !important;/* Mendorong seluruh blok ke ujung kanan */
   }
 }
 </style>
