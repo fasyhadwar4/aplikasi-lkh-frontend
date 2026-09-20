@@ -359,35 +359,24 @@
     </div>
 
    <div class="d-none d-print-block mt-4">
-  <!-- Baris Tempat, Tanggal (Di Sisi Kanan) -->
-  <div class="row mb-2">
-    <div class="col-3"></div>
-    <div class="col-9 kolom-kanan-ttd">
-      <p class="mb-0"><span id="printTempat">-</span>, <span id="printDate">-</span></p>
-    </div>
-  </div>
-
-  <!-- Baris Judul/Jabatan Penandatangan -->
-  <div class="row">
-    <div class="col-3">
+  <div class="d-flex justify-content-between align-items-end">
+    
+    <!-- KOTAK KIRI: ATASAN -->
+    <div class="ttd-kiri">
       <p class="mb-0">Atasan Langsung</p>
-      <p class="mb-0" id="printSignerTitle">-</p>
-    </div>
-    <div class="col-9 kolom-kanan-ttd">
-      <p class="mb-0 text-nowrap" style="font-size: 0.70rem;">Pegawai yang Bersangkutan</p>
-    </div>
-  </div>
-
-  <!-- Baris Nama & NIP (Dengan Ruang Tanda Tangan) -->
-  <div class="row mt-5">
-    <div class="col-3">
+      <p class="mb-5" id="printSignerTitle">-</p>
       <p class="fw-bold mb-0" id="printSignerName">____________________</p>
       <p class="small mb-0" id="printSignerNip">NIP. -</p>
     </div>
-    <div class="col-9 kolom-kanan-ttd">
+
+    <!-- KOTAK KANAN: PEGAWAI (DIBUNGKUS SATU CONTAINER) -->
+    <div class="ttd-kanan">
+      <p class="mb-1"><span id="printTempat">-</span>, <span id="printDate">-</span></p>
+      <p class="mb-5" style="font-size: 0.75rem;">Pegawai yang Bersangkutan</p>
       <p class="fw-bold mb-0" id="printEmpName">-</p>
       <p class="small mb-0" id="printEmpNip">NIP. -</p>
     </div>
+
   </div>
 </div>
 
