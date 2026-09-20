@@ -98,9 +98,10 @@
     .kolom-kanan-ttd {
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-end !important; /* Mendorong konten teks ke tepi kanan */
-    text-align: right !important;
-    padding-right: 0 !important;
+    align-items: flex-start !important; /* Membuat isi teks di dalamnya rata kiri */
+    margin-left: auto !important;       /* Mendorong seluruh blok ke pojok kanan */
+    width: fit-content !important;        /* Lebar menyesuaikan isi teks */
+    padding-left: 0 !important;
   }
 }
 </style>
