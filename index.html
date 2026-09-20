@@ -94,6 +94,14 @@
     box-shadow: none !important;
     font-size: 11px !important;
   }
+
+    .kolom-kanan-ttd {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important; /* Mendorong konten teks ke tepi kanan */
+    text-align: right !important;
+    padding-right: 0 !important;
+  }
 }
 </style>
 </head>
@@ -350,19 +358,34 @@
     </div>
 
    <div class="d-none d-print-block mt-4">
-      <div class="row mb-4">
-      <div class="col-6"></div>
-      <div class="col-6" style="padding-left: 70px;"><p class="mb-0"><span id="printTempat">-</span>, <span id="printDate">-</span></p></div>
+  <!-- Baris Tempat, Tanggal (Di Sisi Kanan) -->
+  <div class="row mb-2">
+    <div class="col-3"></div>
+    <div class="col-9 kolom-kanan-ttd">
+      <p class="mb-0"><span id="printTempat">-</span>, <span id="printDate">-</span></p>
     </div>
-      <div class="row mt-4"><div class="col-6"><p class="mb-0">Atasan Langsung</p></div></div>
-      <div class="row">
-        <div class="col-6"><p class="mb-0" id="printSignerTitle">-</p></div>
-        <div class="col-6" style="padding-left: 70px;"><p class="mb-0 text-nowrap" style="font-size: 0.75rem;">Pegawai yang Bersangkutan</p></div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-6"><p class="fw-bold mb-0" id="printSignerName">____________________</p><p class="small mb-0" id="printSignerNip">NIP. -</p></div>
-        <div class="col-6" style="padding-left: 70px;"><p class="fw-bold mb-0" id="printEmpName">-</p><p class="small mb-0" id="printEmpNip">NIP. -</p></div>
-      </div>
+  </div>
+
+  <!-- Baris Judul/Jabatan Penandatangan -->
+  <div class="row">
+    <div class="col-3">
+      <p class="mb-0">Atasan Langsung</p>
+      <p class="mb-0" id="printSignerTitle">-</p>
+    </div>
+    <div class="col-9 kolom-kanan-ttd">
+      <p class="mb-0 text-nowrap" style="font-size: 0.70rem;">Pegawai yang Bersangkutan</p>
+    </div>
+  </div>
+
+  <!-- Baris Nama & NIP (Dengan Ruang Tanda Tangan) -->
+  <div class="row mt-5">
+    <div class="col-3">
+      <p class="fw-bold mb-0" id="printSignerName">____________________</p>
+      <p class="small mb-0" id="printSignerNip">NIP. -</p>
+    </div>
+    <div class="col-9 kolom-kanan-ttd">
+      <p class="fw-bold mb-0" id="printEmpName">-</p>
+      <p class="small mb-0" id="printEmpNip">NIP. -</p>
     </div>
   </div>
 </div>
