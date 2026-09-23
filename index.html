@@ -178,23 +178,29 @@
 <!-- 3. LAYAR PILIH OPSI PROFIL -->
 <div id="pilihOpsiScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 420px; width: 100%;">
-    <h5 class="fw-bold text-center mb-2">Pilih Cara Isi Profil</h5>
-    <p class="text-muted small text-center mb-3">Pilih salah satu opsi di bawah ini:</p>
+    <h5 class="fw-bold text-center mb-2">Isi Profil</h5>
+    <p class="text-muted small text-center mb-3">Tersimpan permanen, tidak perlu isi ulang tiap login.</p>
 
-    <div class="form-check border rounded p-3 mb-2">
-  <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPakaiNip" value="nip" checked onchange="toggleInputNip()">
-  <label class="form-check-label fw-semibold" for="opsiPakaiNip">Gunakan NIP</label>
-  <p class="small text-muted mb-2">Isi sekali, tersimpan permanen, otomatis terisi tiap login (device apa pun).</p>
-  <div id="opsiNipFields">
     <input type="text" id="opsiNamaLengkap" class="form-control form-control-sm mb-2" placeholder="Nama Lengkap dan Gelar">
-    <input type="text" id="opsiNipInput" class="form-control form-control-sm mb-2" placeholder="NIP">
     <input type="text" id="opsiJabatan" class="form-control form-control-sm mb-2" placeholder="Jabatan">
     <input type="text" id="opsiUnitKerja" class="form-control form-control-sm mb-2" placeholder="Unit Kerja">
+    <input type="text" id="opsiNipInput" class="form-control form-control-sm mb-3" placeholder="NIP (opsional, untuk ditampilkan)">
+
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="opsiPakaiNip">
+      <label class="form-check-label small" for="opsiPakaiNip">Gunakan NIP di atas untuk Masuk cepat (tanpa password) juga</label>
+    </div>
+
     <hr>
+    <p class="small text-muted mb-2">Identitas Penandatangan Dokumen:</p>
     <input type="text" id="opsiSignerJabatan" class="form-control form-control-sm mb-2" placeholder="Jabatan Pejabat Penandatangan">
     <input type="text" id="opsiSignerName" class="form-control form-control-sm mb-2" placeholder="Nama Pejabat Penandatangan">
     <input type="text" id="opsiSignerNip" class="form-control form-control-sm mb-2" placeholder="NIP Pejabat Penandatangan">
-    <input type="text" id="opsiSignerTempat" class="form-control form-control-sm" placeholder="Tempat Pengesahan">
+    <input type="text" id="opsiSignerTempat" class="form-control form-control-sm mb-3" placeholder="Tempat Pengesahan">
+
+    <button id="btnSimpanOpsi" class="btn btn-primary w-100 fw-semibold mb-2" onclick="simpanOpsiLogin()">Simpan</button>
+    <button class="btn btn-outline-secondary w-100" onclick="backToDashboard()">← Kembali</button>
+    <div id="opsiAlert" class="alert alert-danger small d-none mt-2"></div>
   </div>
 </div>
 
@@ -395,6 +401,7 @@ let currentUsername = null;
 let isManualProfile = false;
 let pendingUsername = null;
 let currentAkses = null;
+let currentSigner = null;
 let currentUseNip = false;
 let dataHarianTerakhir = [];
 let filterHarianMode = 'minggu';
@@ -543,20 +550,18 @@ function toggleInputNip() {
 
 async function simpanOpsiLogin() {
   const pakaiNip = document.getElementById('opsiPakaiNip').checked;
-  let profileData = {};
-  if (pakaiNip) {
-    profileData = {
-      namaLengkap: document.getElementById('opsiNamaLengkap').value.trim(),
-      nip: document.getElementById('opsiNipInput').value.trim(),
-      jabatan: document.getElementById('opsiJabatan').value.trim(),
-      unitKerja: document.getElementById('opsiUnitKerja').value.trim(),
-      signerJabatan: document.getElementById('opsiSignerJabatan').value.trim(),
-      signerName: document.getElementById('opsiSignerName').value.trim(),
-      signerNip: document.getElementById('opsiSignerNip').value.trim(),
-      signerTempat: document.getElementById('opsiSignerTempat').value.trim()
-    };
-    if (!profileData.nip || !profileData.namaLengkap) return tampilkanAlert('opsiAlert', "Lengkapi Nama dan NIP minimal.");
-  }
+  const profileData = {
+    namaLengkap: document.getElementById('opsiNamaLengkap').value.trim(),
+    nip: document.getElementById('opsiNipInput').value.trim(),
+    jabatan: document.getElementById('opsiJabatan').value.trim(),
+    unitKerja: document.getElementById('opsiUnitKerja').value.trim(),
+    signerJabatan: document.getElementById('opsiSignerJabatan').value.trim(),
+    signerName: document.getElementById('opsiSignerName').value.trim(),
+    signerNip: document.getElementById('opsiSignerNip').value.trim(),
+    signerTempat: document.getElementById('opsiSignerTempat').value.trim()
+  };
+  if (!profileData.namaLengkap) return tampilkanAlert('opsiAlert', "Nama Lengkap wajib diisi.");
+  if (pakaiNip && !profileData.nip) return tampilkanAlert('opsiAlert', "Isi NIP untuk pakai Masuk NIP.");
 
   const btn = document.getElementById('btnSimpanOpsi');
   btn.disabled = true; btn.innerText = "Menyimpan...";
@@ -569,7 +574,7 @@ async function simpanOpsiLogin() {
       if (statusRes.success) masukKeAplikasi(statusRes);
       else tampilkanAlert('opsiAlert', statusRes.error);
     } else {
-      tampilkanAlert('opsiAlert', res.error || "Gagal menyimpan opsi.");
+      tampilkanAlert('opsiAlert', res.error || "Gagal menyimpan.");
     }
   } catch (err) {
     btn.disabled = false; btn.innerText = "Simpan";
@@ -597,23 +602,23 @@ function masukKeAplikasi(res) {
   }
 
   const fields = ['empName', 'empNip', 'empPosition', 'empUnit'];
-  if (isManualProfile) {
-    fields.forEach(id => {
-      const el = document.getElementById(id);
-      el.removeAttribute('readonly');
-      el.value = localStorage.getItem('hist_' + id + '_last') || '';
-      muatDatalistHistori(id, 'dl' + id.replace('emp', ''));
-      el.onblur = () => simpanHistori(id, 'dl' + id.replace('emp', ''));
-    });
-  } else {
-    fields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
-    if (res.profile) {
-      document.getElementById('empName').value = res.profile.nama;
-      document.getElementById('empNip').value = res.profile.nip;
-      document.getElementById('empPosition').value = res.profile.jabatan;
-      document.getElementById('empUnit').value = res.profile.unitKerja;
-    }
-  }
+  document.getElementById('empName').setAttribute('readonly', true);
+document.getElementById('empNip').setAttribute('readonly', true);
+document.getElementById('empPosition').setAttribute('readonly', true);
+document.getElementById('empUnit').setAttribute('readonly', true);
+if (res.profile) {
+  document.getElementById('empName').value = res.profile.nama || '';
+  document.getElementById('empNip').value = res.profile.nip || '';
+  document.getElementById('empPosition').value = res.profile.jabatan || '';
+  document.getElementById('empUnit').value = res.profile.unitKerja || '';
+}
+currentSigner = res.signer;
+if (res.signer) {
+  document.getElementById('signerJabatan').value = res.signer.jabatan || '';
+  document.getElementById('signerName').value = res.signer.name || '';
+  document.getElementById('signerNip').value = res.signer.nip || '';
+  document.getElementById('signerTempat').value = res.signer.tempat || '';
+}
   if (res.useNip && res.signer) {
   document.getElementById('signerJabatan').value = res.signer.jabatan || '';
   document.getElementById('signerName').value = res.signer.name || '';
@@ -641,8 +646,14 @@ function backToDashboard() {
 function bukaOpsiDariDashboard() {
   pendingUsername = currentUsername;
   document.getElementById('opsiPakaiNip').checked = currentUseNip;
-  document.getElementById('opsiPassword').checked = !currentUseNip;
-  toggleInputNip();
+  document.getElementById('opsiNamaLengkap').value = (currentUserProfile && currentUserProfile.nama) || '';
+  document.getElementById('opsiJabatan').value = (currentUserProfile && currentUserProfile.jabatan) || '';
+  document.getElementById('opsiUnitKerja').value = (currentUserProfile && currentUserProfile.unitKerja) || '';
+  document.getElementById('opsiNipInput').value = (currentUserProfile && currentUserProfile.nip) || '';
+  document.getElementById('opsiSignerJabatan').value = (currentSigner && currentSigner.jabatan) || '';
+  document.getElementById('opsiSignerName').value = (currentSigner && currentSigner.name) || '';
+  document.getElementById('opsiSignerNip').value = (currentSigner && currentSigner.nip) || '';
+  document.getElementById('opsiSignerTempat').value = (currentSigner && currentSigner.tempat) || '';
   tampilkanLayar('pilihOpsiScreen');
 }
 
