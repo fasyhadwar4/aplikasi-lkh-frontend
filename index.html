@@ -533,9 +533,20 @@ async function prosesDaftar() {
     const res = await callApi('registerAccount', { username: u, password: p });
     btn.disabled = false; btn.innerText = "Daftar";
     if (res.success) {
-      pendingUsername = u;
-      tampilkanLayar('pilihOpsiScreen');
-      toggleInputNip();
+      // 1. Berikan notifikasi sukses
+      tampilkanAlert('loginAlert', "Pendaftaran berhasil! Silakan masuk.", "success");
+      
+      // 2. Isi otomatis username yang baru didaftarkan ke form Login (opsional)
+      if (document.getElementById('loginUsername')) {
+        document.getElementById('loginUsername').value = u;
+      }
+      
+      // 3. Bersihkan form pendaftaran
+      document.getElementById('daftarUsername').value = '';
+      document.getElementById('daftarPassword').value = '';
+
+      // 4. Dialihkan ke layar Masuk / Login
+      tampilkanLayar('loginScreen');
     } else {
       tampilkanAlert('loginAlert', res.error || "Gagal mendaftar.");
     }
@@ -544,7 +555,6 @@ async function prosesDaftar() {
     tampilkanAlert('loginAlert', "Error koneksi: " + err.message);
   }
 }
-
 function toggleInputNip() {
   const pakaiNip = document.getElementById('opsiPakaiNip').checked;
   document.getElementById('opsiNipFields').style.display = pakaiNip ? 'block' : 'none';
