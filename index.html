@@ -198,7 +198,7 @@
   </div>
 </div>
 
-    <div class="form-check border rounded p-3 mb-3">
+    <div class="form-check border rounded p-3 mb-3" style="display: none !important;">
       <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPassword" value="password" onchange="toggleInputNip()">
       <label class="form-check-label fw-semibold" for="opsiPassword">Hanya Password</label>
       <p class="small text-muted mb-0">Profil diisi manual sendiri. NIP tidak disetorkan ke sistem.</p>
@@ -640,8 +640,8 @@ function backToDashboard() {
 
 function bukaOpsiDariDashboard() {
   pendingUsername = currentUsername;
-  document.getElementById('opsiPakaiNip').checked = currentUseNip;
-  document.getElementById('opsiPassword').checked = !currentUseNip;
+  document.getElementById('opsiPakaiNip').checked = true;
+  document.getElementById('opsiPassword').checked = false;
   toggleInputNip();
   tampilkanLayar('pilihOpsiScreen');
 }
