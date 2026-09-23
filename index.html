@@ -586,8 +586,7 @@ function tampilkanLayarTerkunci(alasan) {
 
 function masukKeAplikasi(res) {
   currentUsername = res.username;
-  currentUseNip = !!res.useNip;
-  isManualProfile = !res.useNip;
+  currentUseNip = true;
   currentUserProfile = res.profile;
   currentAkses = res.akses;
 
@@ -596,11 +595,18 @@ function masukKeAplikasi(res) {
     return;
   }
 
-  // Kunci semua bidang input profil secara permanen untuk semua akun
+  // 1. Kunci semua kolom input profil & hapus daftar rekomendasi (datalist)
   const fields = ['empName', 'empNip', 'empPosition', 'empUnit'];
-  fields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.setAttribute('readonly', true); // Kunci agar tidak bisa diketik
+      el.removeAttribute('list');        // Hapus dropdown pilihan nama lokal
+      el.value = '';                     // Bersihkan sisa nilai lama
+    }
+  });
 
-  // Isi data profil otomatis dari server jika ada
+  // 2. Isi data profil resmi yang berasal dari server
   if (res.profile) {
     document.getElementById('empName').value = res.profile.nama || '';
     document.getElementById('empNip').value = res.profile.nip || '';
@@ -608,7 +614,7 @@ function masukKeAplikasi(res) {
     document.getElementById('empUnit').value = res.profile.unitKerja || '';
   }
 
-  // Isi data pejabat penandatangan dari server jika ada
+  // 3. Isi data pejabat penandatangan jika ada
   if (res.signer) {
     document.getElementById('signerJabatan').value = res.signer.jabatan || '';
     document.getElementById('signerName').value = res.signer.name || '';
@@ -616,13 +622,9 @@ function masukKeAplikasi(res) {
     document.getElementById('signerTempat').value = res.signer.tempat || '';
   }
 
-  ['signerName','signerNip','signerJabatan','signerTempat'].forEach(id => {
-    muatDatalistHistori(id, 'dl' + id.charAt(0).toUpperCase() + id.slice(1));
-    document.getElementById(id).onblur = () => simpanHistori(id, 'dl' + id.charAt(0).toUpperCase() + id.slice(1));
-  });
-
   tampilkanDashboard();
 }
+  
 function tampilkanDashboard() {
   document.getElementById('dashboardUsername').innerText = 'Masuk sebagai: ' + currentUsername;
   tampilkanLayar('dashboardScreen');
