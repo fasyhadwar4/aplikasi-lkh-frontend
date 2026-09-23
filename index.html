@@ -534,7 +534,7 @@ async function prosesDaftar() {
     btn.disabled = false; btn.innerText = "Daftar";
     if (res.success) {
       // 1. Berikan notifikasi sukses
-      tampilkanAlert('loginAlert', "Pendaftaran berhasil! Silakan masuk.", "success");
+      tampilkanAlert('loginAlert', '<div class="text-center">Pendaftaran berhasil! Silakan masuk.</div>', 'success');
       
       // 2. Isi otomatis username yang baru didaftarkan ke form Login (opsional)
       if (document.getElementById('loginUsername')) {
