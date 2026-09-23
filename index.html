@@ -29,6 +29,15 @@
   .separator {
     width: 15px;
   }
+
+    #empName, #empNip, #empPosition, #empUnit {
+    pointer-events: none !important;      /* Mematikan klik, kursor, dan fokus keyboard */
+    background-color: #e9ecef !important; /* Warna abu-abu soft tanda terkunci */
+    color: #495057 !important;            /* Warna teks tetap jelas terbaca */
+    border: 1px solid #ced4da !important;  /* Tampilan form terikat rapi */
+    user-select: none !important;         /* Mencegah teks diblok/di-highlight */
+  }
+  
   @media print {
   /* 1. Sembunyikan elemen non-cetak (Tombol Menu & Keluar) */
   .no-print, .no-print * { 
