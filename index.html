@@ -604,6 +604,16 @@ function masukKeAplikasi(res) {
     return;
   }
 
+// 1. SEMBUNYIKAN / KUNCI TOMBOL MENU "PILIH CARA ISI PROFIL" JIKA NIP SUDAH ADA
+  const btnPilihOpsi = document.getElementById('btnMenuPilihOpsi') || document.querySelector('[onclick*="bukaOpsi"]');
+  if (btnPilihOpsi) {
+    if (res.profile && res.profile.nip) {
+      btnPilihOpsi.style.display = 'none'; // Sembunyikan tombol jika profil NIP sudah terikat
+    } else {
+      btnPilihOpsi.style.display = 'block'; // Tampilkan hanya jika profil belum pernah diisi
+    }
+  }
+  
   // 1. Kunci semua kolom input profil & hapus daftar rekomendasi (datalist)
   const fields = ['empName', 'empNip', 'empPosition', 'empUnit'];
   fields.forEach(id => {
@@ -644,6 +654,12 @@ function backToDashboard() {
 }
 
 function bukaOpsiDariDashboard() {
+  // Cek apakah akun sudah terikat dengan data NIP/Profil
+  if (currentUserProfile && currentUserProfile.nip) {
+    alert("Profil Anda sudah terikat permanen dengan NIP " + currentUserProfile.nip + " dan tidak dapat diubah lagi.");
+    return; // Hentikan eksekusi, layar ubah profil tidak akan terbuka
+  }
+
   pendingUsername = currentUsername;
   document.getElementById('opsiPakaiNip').checked = true;
   document.getElementById('opsiPassword').checked = false;
