@@ -683,23 +683,23 @@ function tampilkanStatusAkses(akses) {
   }
 }
 
-//function simpanHistori(fieldId, datalistId) {
-  //const val = document.getElementById(fieldId).value.trim();
-  //if (!val) return;
-  //localStorage.setItem('hist_' + fieldId + '_last', val);
-  //let arr = JSON.parse(localStorage.getItem('hist_' + fieldId) || '[]');
-  //if (!arr.includes(val)) {
-    //arr.unshift(val);
-    //arr = arr.slice(0, 10);
-    //localStorage.setItem('hist_' + fieldId, JSON.stringify(arr));
-  }//
-  //muatDatalistHistori(fieldId, datalistId);
-}//
-//function muatDatalistHistori(fieldId, datalistId) {
-  //const arr = JSON.parse(localStorage.getItem('hist_' + fieldId) || '[]');
-  //const dl = document.getElementById(datalistId);
-  //if (dl) dl.innerHTML = arr.map(v => `<option value="${v.replace(/"/g,'&quot;')}">`).join('');
-}//
+function simpanHistori(fieldId, datalistId) {
+  const val = document.getElementById(fieldId).value.trim();
+  if (!val) return;
+  localStorage.setItem('hist_' + fieldId + '_last', val);
+  let arr = JSON.parse(localStorage.getItem('hist_' + fieldId) || '[]');
+  if (!arr.includes(val)) {
+    arr.unshift(val);
+    arr = arr.slice(0, 10);
+    localStorage.setItem('hist_' + fieldId, JSON.stringify(arr));
+  }
+  muatDatalistHistori(fieldId, datalistId);
+}
+function muatDatalistHistori(fieldId, datalistId) {
+  const arr = JSON.parse(localStorage.getItem('hist_' + fieldId) || '[]');
+  const dl = document.getElementById(datalistId);
+  if (dl) dl.innerHTML = arr.map(v => `<option value="${v.replace(/"/g,'&quot;')}">`).join('');
+}
 
 function logout() {
   localStorage.removeItem('lkh_username');
