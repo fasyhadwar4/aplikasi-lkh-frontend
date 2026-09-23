@@ -596,31 +596,26 @@ function masukKeAplikasi(res) {
     return;
   }
 
+  // Kunci semua bidang input profil secara permanen untuk semua akun
   const fields = ['empName', 'empNip', 'empPosition', 'empUnit'];
-  if (isManualProfile) {
-    fields.forEach(id => {
-      const el = document.getElementById(id);
-      el.removeAttribute('readonly');
-      el.value = localStorage.getItem('hist_' + id + '_last') || '';
-      muatDatalistHistori(id, 'dl' + id.replace('emp', ''));
-      el.onblur = () => simpanHistori(id, 'dl' + id.replace('emp', ''));
-    });
-  } else {
-    fields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
-    if (res.profile) {
-      document.getElementById('empName').value = res.profile.nama;
-      document.getElementById('empNip').value = res.profile.nip;
-      document.getElementById('empPosition').value = res.profile.jabatan;
-      document.getElementById('empUnit').value = res.profile.unitKerja;
-    }
+  fields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
+
+  // Isi data profil otomatis dari server jika ada
+  if (res.profile) {
+    document.getElementById('empName').value = res.profile.nama || '';
+    document.getElementById('empNip').value = res.profile.nip || '';
+    document.getElementById('empPosition').value = res.profile.jabatan || '';
+    document.getElementById('empUnit').value = res.profile.unitKerja || '';
   }
-  if (res.useNip && res.signer) {
-  document.getElementById('signerJabatan').value = res.signer.jabatan || '';
-  document.getElementById('signerName').value = res.signer.name || '';
-  document.getElementById('signerNip').value = res.signer.nip || '';
-  document.getElementById('signerTempat').value = res.signer.tempat || '';
-    }
-  
+
+  // Isi data pejabat penandatangan dari server jika ada
+  if (res.signer) {
+    document.getElementById('signerJabatan').value = res.signer.jabatan || '';
+    document.getElementById('signerName').value = res.signer.name || '';
+    document.getElementById('signerNip').value = res.signer.nip || '';
+    document.getElementById('signerTempat').value = res.signer.tempat || '';
+  }
+
   ['signerName','signerNip','signerJabatan','signerTempat'].forEach(id => {
     muatDatalistHistori(id, 'dl' + id.charAt(0).toUpperCase() + id.slice(1));
     document.getElementById(id).onblur = () => simpanHistori(id, 'dl' + id.charAt(0).toUpperCase() + id.slice(1));
@@ -628,7 +623,6 @@ function masukKeAplikasi(res) {
 
   tampilkanDashboard();
 }
-
 function tampilkanDashboard() {
   document.getElementById('dashboardUsername').innerText = 'Masuk sebagai: ' + currentUsername;
   tampilkanLayar('dashboardScreen');
