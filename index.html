@@ -302,6 +302,16 @@
   <div class="card p-3 mb-4 no-print">
     <label class="form-label fw-bold small">Input Kegiatan Baru (Voice Note / Teks):</label>
     <textarea id="userInput" class="form-control mb-2" rows="2" placeholder="Contoh: Hari ini saya melakukan koordinasi dengan imam masjid, menyusun laporan bulanan, dan rapat evaluasi."></textarea>
+
+    <div class="mb-2">
+      <input type="file" id="imageInput" accept="image/*" class="d-none" onchange="pilihGambar(this)">
+      <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('imageInput').click()">📷 Lampirkan Gambar</button>
+      <span id="imagePreviewWrap" class="d-none ms-2">
+          <img id="imagePreview" class="rounded border" style="max-height:80px; vertical-align:middle;">
+          <button type="button" class="btn btn-sm btn-outline-danger ms-1" onclick="hapusGambar()">✕</button>
+      </span>
+    </div>
+    
     <div class="d-flex justify-content-between align-items-center">
       <small class="text-muted small">🎙️ Tekan ikon mikrofon pada keyboard HP untuk rekaman suara.</small>
       <button id="btnSubmit" class="btn btn-primary btn-sm px-4" onclick="submitData()">Proses & Simpan</button>
