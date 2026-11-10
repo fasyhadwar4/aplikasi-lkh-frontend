@@ -9,7 +9,7 @@
   body { background-color: #f4f6f9; font-family: 'Segoe UI', Arial, sans-serif; }
   .card { border-radius: 10px; border: 1px solid #e0e4e8; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .table-custom th { background-color: #f1f3f5; text-align: center; vertical-align: middle; }
-  
+
   /* Tampilan Layar Tunggal */
   .screen-container {
     min-height: 90vh;
@@ -37,15 +37,14 @@
     border: 1px solid #ced4da !important;
     user-select: none !important;
   }
-  
-  /* --- STYLES DARI KODE BARU --- */
+
   h4 { font-size: 14px; }
   h6 { font-size: 12px; }
 
   .area-ttd {
     margin-top: -8px !important;
   }
-  
+
   @media print {
     @page {
       margin: 1cm 0.7cm;
@@ -120,7 +119,7 @@
       justify-content: center !important;
     }
 
-    #mainReportTitle, 
+    #mainReportTitle,
     #mainReportMonth,
     h1, h2, h3, .header-title {
       text-align: center !important;
@@ -157,7 +156,7 @@
       <li class="nav-item"><button class="nav-link" id="tabNipCepat" onclick="gantiTabLogin('nipcepat')">Masuk NIP</button></li>
       <div class="mt-3 text-center" style="display: none !important;">
         <li class="nav-item"><button class="nav-link" id="tabDaftar" onclick="gantiTabLogin('daftar')">Daftar</button></li>
-      </div>    
+      </div>
     </ul>
 
     <div id="formMasuk">
@@ -310,7 +309,7 @@
   <div class="card p-3 mb-4 no-print">
     <label class="form-label fw-bold small">Input Kegiatan Baru (Voice Note / Teks):</label>
     <textarea id="userInput" class="form-control mb-2" rows="2" placeholder="Contoh: Hari ini saya melakukan koordinasi dengan imam masjid, menyusun laporan bulanan, dan rapat evaluasi."></textarea>
-    
+
     <div class="mb-2">
       <label class="form-label small mb-1">📷 Atau lampirkan gambar (foto kamera / screenshot / galeri):</label>
       <input type="file" id="inputGambar" accept="image/*" class="form-control form-control-sm" onchange="previewGambar()">
@@ -329,7 +328,7 @@
 
   <!-- Area Data & Tabel -->
   <div class="card p-3 mb-4">
-    
+
     <!-- Dropdown Filter Bulan -->
     <div class="d-flex align-items-center gap-2 mb-2 no-print">
       <label class="small fw-bold mb-0" for="pilihBulan">📆 Bulan:</label>
@@ -417,7 +416,7 @@
     <button class="btn btn-danger btn-sm" onclick="window.print()">📄 Cetak / Download PDF</button>
   </div>
 
-  <!-- AREA TANDA TANGAN CETAK (Format Baru) -->
+  <!-- AREA TANDA TANGAN CETAK -->
   <div class="d-none d-print-block mt-4">
     <div class="row mb-4">
       <div class="col-3"></div>
@@ -483,17 +482,28 @@ let filterHarianMode = 'minggu';
 let filterHarianSebelumPrint = null;
 
 const BULAN_UPPER = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
-let bulanTerpilih = ''; 
+let bulanTerpilih = '';
 
-// API CALLER KUSTOM KE GOOGLE APPS SCRIPT
+// ==========================================================
+// API CALLER KE GOOGLE APPS SCRIPT (POST, body text/plain)
+// text/plain dipakai agar browser tidak melakukan preflight CORS.
+// Data besar (gambar base64) aman karena lewat body, bukan URL.
+// ==========================================================
 async function callApi(action, params = {}) {
-  const url = APPS_SCRIPT_URL + '?action=' + encodeURIComponent(action) + '&params=' + encodeURIComponent(JSON.stringify(params));
-  const response = await fetch(url, { method: 'GET' });
+  const response = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: action, params: params })
+  });
   const responseText = await response.text();
   if (!response.ok) {
     throw new Error('HTTP ' + response.status + ' - Isi respons: ' + responseText.substring(0, 300));
   }
-  return JSON.parse(responseText);
+  try {
+    return JSON.parse(responseText);
+  } catch (e) {
+    throw new Error('Respons server bukan JSON: ' + responseText.substring(0, 200));
+  }
 }
 
 function tampilkanAlert(elId, pesan) {
@@ -673,7 +683,7 @@ function tampilkanLayarTerkunci(alasan) {
 
 function masukKeAplikasi(res) {
   currentUsername = res.username;
-  currentUseNip = true;
+  currentUseNip = !!res.useNip;
   currentUserProfile = res.profile;
   currentAkses = res.akses;
 
@@ -772,7 +782,9 @@ function logout() {
   tampilkanLayar('loginScreen');
 }
 
+// ==========================================================
 // LOGIKA BULAN & FILTER
+// ==========================================================
 function keyDariTanggal(d) {
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
 }
@@ -858,8 +870,9 @@ function switchToBulanan() {
   loadBulanan();
 }
 
+// ==========================================================
 // PROSES TEKS, VOICE NOTE, DAN GAMBAR
-const BATAS_BYTE_GAMBAR = 7 * 1024 * 1024;
+// ==========================================================
 
 function bacaSebagaiDataUrl(file) {
   return new Promise((resolve, reject) => {
@@ -870,42 +883,31 @@ function bacaSebagaiDataUrl(file) {
   });
 }
 
-function ukuranByteDataUrl(dataUrl) {
-  const b64 = dataUrl.split(',')[1] || '';
-  return Math.floor(b64.length * 0.75);
-}
-
-async function kompresGambar(file) {
-  const tipeAman = ['image/jpeg', 'image/png', 'image/webp'];
-  if (tipeAman.includes(file.type) && file.size <= BATAS_BYTE_GAMBAR) {
-    return await bacaSebagaiDataUrl(file);
-  }
+/**
+ * Selalu perkecil gambar (sisi terpanjang maks `maxSisi` px) dan simpan sebagai JPEG.
+ * Hasil umumnya 200-500 KB, aman untuk dikirim lewat POST dan cepat diproses Gemini.
+ */
+async function kompresGambar(file, maxSisi, kualitas) {
+  maxSisi = maxSisi || 1600;
+  kualitas = kualitas || 0.8;
 
   const srcUrl = await bacaSebagaiDataUrl(file);
   const img = await new Promise((resolve, reject) => {
     const im = new Image();
-    im.onerror = () => reject(new Error("File bukan gambar yang valid."));
+    im.onerror = () => reject(new Error("File bukan gambar yang valid (atau format belum didukung browser)."));
     im.onload = () => resolve(im);
     im.src = srcUrl;
   });
 
-  let skala = 1;
-  const kualitasList = [0.92, 0.85, 0.75, 0.65];
-  while (true) {
-    const w = Math.max(1, Math.round(img.width * skala));
-    const h = Math.max(1, Math.round(img.height * skala));
-    const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
-    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-
-    for (let i = 0; i < kualitasList.length; i++) {
-      const hasil = canvas.toDataURL('image/jpeg', kualitasList[i]);
-      if (ukuranByteDataUrl(hasil) <= BATAS_BYTE_GAMBAR) return hasil;
-    }
-    skala *= 0.8;
-    if (skala < 0.2) throw new Error("Gambar terlalu besar untuk diproses.");
-  }
+  const skala = Math.min(1, maxSisi / Math.max(img.width, img.height));
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(img.width * skala));
+  canvas.height = Math.max(1, Math.round(img.height * skala));
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff'; // latar putih agar PNG transparan tidak jadi hitam
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/jpeg', kualitas);
 }
 
 function previewGambar() {
@@ -934,7 +936,7 @@ async function submitData() {
   let imageDataUrl = null;
   if (file) {
     try {
-      imageDataUrl = await kompresGambar(file);
+      imageDataUrl = await kompresGambar(file, 1600, 0.8);
     } catch (e) {
       btn.disabled = false;
       btn.innerText = "Proses & Simpan";
@@ -1043,7 +1045,17 @@ async function loadBulanan() {
     const data = await callApi('getLKBRecap', { nip: currentUsername, bulan: bulanTerpilih });
     const tbody = document.getElementById('tableBulananBody');
     tbody.innerHTML = "";
-    if (!data || data.length === 0) {
+
+    // Backend bisa mengembalikan objek error (mis. akun terkunci), bukan array
+    if (!Array.isArray(data)) {
+      if (data && data.error) {
+        tampilkanLayarTerkunci(String(data.error).replace('Terkunci: ', ''));
+        return;
+      }
+      tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Belum ada rekapitulasi.</td></tr>';
+      return;
+    }
+    if (data.length === 0) {
       tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Belum ada rekapitulasi.</td></tr>';
       return;
     }
@@ -1117,7 +1129,7 @@ function formatTanggalIndo(dateStr) {
 window.onbeforeprint = function() {
   filterHarianSebelumPrint = filterHarianMode;
   if (filterHarianMode !== 'semua') { filterHarianMode = 'semua'; renderTabelHarian(); }
-  
+
   document.querySelectorAll('.no-print').forEach(el => el.style.setProperty('display', 'none', 'important'));
 
   const signerNameVal = document.getElementById('signerName').value || '____________________';
@@ -1181,7 +1193,9 @@ Object.keys(FIELD_HISTORY_MAP).forEach(fieldId => {
   }
 });
 
+// ==========================================================
 // MODAL LAPORAN DETIL & PEMBUATAN DOKUMEN (PDF/PNG)
+// ==========================================================
 let modalDetilInstance;
 let kegiatanTerpilih = null;
 
@@ -1193,7 +1207,7 @@ async function bukaLaporanDetil(index) {
 
   try {
     const res = await callApi('cariTemplateUntukKegiatan', { uraian: kegiatanTerpilih.uraian });
-    const templateKey = res.templateKey || res;
+    const templateKey = (res && res.templateKey) || null;
     if (templateKey === 'penyuluhan_tatap_muka') {
       renderFormPenyuluhan();
     } else if (templateKey === 'laporan_mingguan') {
@@ -1311,14 +1325,11 @@ function isiDropdownPenyuluhan() {
   });
 }
 
-function fileToBase64(fileInput) {
-  return new Promise((resolve) => {
-    const file = fileInput.files[0];
-    if (!file) return resolve(null);
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.readAsDataURL(file);
-  });
+// Baca foto dari input file, perkecil (maks 1200 px) lalu jadikan base64 JPEG
+async function fileToBase64(fileInput) {
+  const file = fileInput.files[0];
+  if (!file) return null;
+  return await kompresGambar(file, 1200, 0.8);
 }
 
 async function submitLaporanPenyuluhan() {
@@ -1328,10 +1339,18 @@ async function submitLaporanPenyuluhan() {
   btn.innerText = "Memproses...";
   statusEl.innerText = "Mengonversi foto & mengirim data...";
 
-  const foto1 = await fileToBase64(document.getElementById('f_foto1'));
-  const foto2 = await fileToBase64(document.getElementById('f_foto2'));
-  const foto3 = await fileToBase64(document.getElementById('f_foto3'));
-  const foto4 = await fileToBase64(document.getElementById('f_foto4'));
+  let foto1, foto2, foto3, foto4;
+  try {
+    foto1 = await fileToBase64(document.getElementById('f_foto1'));
+    foto2 = await fileToBase64(document.getElementById('f_foto2'));
+    foto3 = await fileToBase64(document.getElementById('f_foto3'));
+    foto4 = await fileToBase64(document.getElementById('f_foto4'));
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerText = "Buat Laporan (PDF)";
+    statusEl.innerHTML = `<span class="text-danger">Gagal membaca foto: ${e.message}</span>`;
+    return;
+  }
 
   const formData = {
     tanggal: kegiatanTerpilih.tanggal,
