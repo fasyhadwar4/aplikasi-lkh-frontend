@@ -428,6 +428,10 @@ let dataHarianTerakhir = [];
 let filterHarianMode = 'minggu';
 let filterHarianSebelumPrint = null;
 
+let gambarTerpilih = null;
+let filterBulan = 'all';
+const NAMA_BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
 async function callApi(action, params = {}) {
   const url = APPS_SCRIPT_URL + '?action=' + encodeURIComponent(action) + '&params=' + encodeURIComponent(JSON.stringify(params));
   const response = await fetch(url, { method: 'GET' });
@@ -436,6 +440,112 @@ async function callApi(action, params = {}) {
     throw new Error('HTTP ' + response.status + ' - Isi respons: ' + responseText.substring(0, 300));
   }
   return JSON.parse(responseText);
+}
+
+async function callApiPost(action, params = {}) {
+  const response = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action, params })
+  });
+  const responseText = await response.text();
+  if (!response.ok) throw new Error('HTTP ' + response.status + ' - ' + responseText.substring(0, 300));
+  return JSON.parse(responseText);
+}
+
+function pilihGambar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('File harus berupa gambar.'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1280;
+      const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      gambarTerpilih = { mimeType: 'image/jpeg', data: dataUrl.split(',')[1] };
+      document.getElementById('imagePreview').src = dataUrl;
+      document.getElementById('imagePreviewWrap').classList.remove('d-none');
+    };
+    img.onerror = () => { alert('Gambar tidak bisa dibaca. Coba format JPG/PNG.'); input.value = ''; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function hapusGambar() {
+  gambarTerpilih = null;
+  document.getElementById('imageInput').value = '';
+  document.getElementById('imagePreview').src = '';
+  document.getElementById('imagePreviewWrap').classList.add('d-none');
+}
+
+async function submitData() {
+  const text = document.getElementById('userInput').value.trim();
+  if (!text && !gambarTerpilih) return alert("Masukkan teks, dikte suara, atau lampirkan gambar!");
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.innerText = "Memproses AI...";
+
+  try {
+    const res = await callApiPost('processVoiceOrText', {
+      userText: text, nip: currentUsername, image: gambarTerpilih
+    });
+    btn.disabled = false;
+    btn.innerText = "Proses & Simpan";
+    if (res.success) {
+      document.getElementById('userInput').value = "";
+      hapusGambar();
+      loadHarian();
+      loadBulanan();
+      alert("Data berhasil dicatat!");
+    } else if (res.error && res.error.indexOf('Terkunci') === 0) {
+      tampilkanLayarTerkunci(res.error.replace('Terkunci: ', ''));
+    } else {
+      alert("Gagal: " + res.error);
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.innerText = "Proses & Simpan";
+    alert("Error: " + err.message);
+  }
+}
+
+function isiPilihanBulan() {
+  const sel = document.getElementById('filterBulan');
+  const set = new Set();
+  dataHarianTerakhir.forEach(r => {
+    const p = (r[1] || '').split('/');           // dd/MM/yyyy
+    if (p.length === 3) set.add(p[2] + '-' + p[1].padStart(2, '0'));
+  });
+  const list = Array.from(set).sort().reverse();
+  sel.innerHTML = '<option value="all">Semua Bulan</option>' +
+    list.map(v => {
+      const [y, m] = v.split('-');
+      return `<option value="${v}">${NAMA_BULAN[parseInt(m) - 1]} ${y}</option>`;
+    }).join('');
+  if (filterBulan !== 'all' && !set.has(filterBulan)) filterBulan = 'all';
+  sel.value = filterBulan;
+}
+
+function tanggalCocokBulan(tglStr) {
+  if (filterBulan === 'all') return true;
+  const p = (tglStr || '').split('/');
+  if (p.length !== 3) return true;
+  return (p[2] + '-' + p[1].padStart(2, '0')) === filterBulan;
+}
+
+function gantiFilterBulan() {
+  filterBulan = document.getElementById('filterBulan').value;
+  updateBulanBerjalan();
+  renderTabelHarian();
+  loadBulanan();
 }
 
 function tampilkanAlert(elId, pesan) {
@@ -806,6 +916,7 @@ async function loadHarian() {
       return;
     }
     dataHarianTerakhir = data || [];
+    isiPilihanBulan();
     renderTabelHarian();
   } catch (err) {
     document.getElementById('tableHarianBody').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error: ${err.message}</td></tr>`;
@@ -840,29 +951,33 @@ function renderTabelHarian() {
     updateJumlahTerpilih();
     return;
   }
-  let adaBarisTampil = false;
+  let html = '';
+  let lastTgl = null, counter = 0;
   data.forEach((row) => {
+    if (!tanggalCocokBulan(row[1])) return;
     if (filterHarianMode === 'hari' && !tanggalHariIni(row[1])) return;
     if (filterHarianMode === 'minggu' && !tanggalDalamMingguIni(row[1])) return;
-    adaBarisTampil = true;
+    let noTampil = '';
+    if (row[1] !== lastTgl) { counter++; noTampil = counter; lastTgl = row[1]; }
     const id = row[5];
-    tbody.innerHTML += `
+    html += `
       <tr>
         <td class="text-center no-print"><input type="checkbox" class="chk-harian" value="${id}" onchange="updateJumlahTerpilih()"></td>
-        <td class="text-center fw-bold">${row[0] !== undefined ? row[0] : ''}</td>
+        <td class="text-center fw-bold">${noTampil}</td>
         <td class="text-center">${row[1] || ''}</td>
         <td>${row[2] || ''}</td>
         <td class="text-center">${row[3] !== undefined ? row[3] : ''}</td>
         <td class="text-center">${row[4] || ''}</td>
       </tr>`;
   });
-  if (!adaBarisTampil) {
-    const pesan = filterHarianMode === 'hari' ? 'hari ini' : 'minggu ini';
-    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Tidak ada kegiatan ${pesan}. <a href="#" onclick="gantiFilterHarian('semua'); return false;">Tampilkan semua data</a></td></tr>`;
+  if (!html) {
+    const pesan = filterHarianMode === 'hari' ? 'hari ini' : (filterHarianMode === 'minggu' ? 'minggu ini' : 'pada bulan ini');
+    html = `<tr><td colspan="6" class="text-center text-muted">Tidak ada kegiatan ${pesan}. <a href="#" onclick="gantiFilterHarian('semua'); return false;">Tampilkan semua data</a></td></tr>`;
   }
+  tbody.innerHTML = html;
   updateJumlahTerpilih();
 }
-
+  
 function gantiFilterHarian(mode) {
   filterHarianMode = mode;
   document.getElementById('btnFilterHari').classList.toggle('active', mode === 'hari');
@@ -873,7 +988,7 @@ function gantiFilterHarian(mode) {
 
 async function loadBulanan() {
   try {
-    const data = await callApi('getLKBRecap', { nip: currentUsername });
+    const data = await callApi('getLKBRecap', { nip: currentUsername, bulan: filterBulan });
     const tbody = document.getElementById('tableBulananBody');
     tbody.innerHTML = "";
     if (!data || data.length === 0) {
@@ -942,9 +1057,15 @@ function formatTanggalIndo(dateStr) {
 }
 
 function updateBulanBerjalan() {
-  const bulanIndo = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
-  const now = new Date();
-  document.getElementById('mainReportMonth').innerText = "BULAN " + bulanIndo[now.getMonth()] + " " + now.getFullYear();
+  let m, y;
+  if (filterBulan !== 'all') {
+    const p = filterBulan.split('-');
+    y = p[0]; m = parseInt(p[1]) - 1;
+  } else {
+    const now = new Date();
+    y = now.getFullYear(); m = now.getMonth();
+  }
+  document.getElementById('mainReportMonth').innerText = "BULAN " + NAMA_BULAN[m].toUpperCase() + " " + y;
 }
   
 window.onbeforeprint = function() {
