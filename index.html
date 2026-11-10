@@ -321,7 +321,14 @@
       <button type="button" id="btnFilterSemua" class="btn btn-outline-primary" onclick="gantiFilterHarian('semua')">📋 Semua Data</button>
       <button type="button" class="btn btn-outline-danger" onclick="scrollKeCetak()">📄 Ke Cetak</button>
     </div>
-
+    
+    <div class="d-flex align-items-center gap-2 mb-2 no-print">
+      <label class="small fw-bold mb-0" for="filterBulan">🗓️ Bulan:</label>
+      <select id="filterBulan" class="form-select form-select-sm" style="max-width:220px" onchange="gantiFilterBulan()">
+      <option value="all">Semua Bulan</option>
+      </select>
+    </div>
+    
     <div class="tab-content">
       <div class="tab-pane fade show active" id="harian" role="tabpanel">
         <div class="d-flex justify-content-end mb-2 no-print">
