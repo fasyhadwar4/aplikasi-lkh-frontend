@@ -9,8 +9,8 @@
   body { background-color: #f4f6f9; font-family: 'Segoe UI', Arial, sans-serif; }
   .card { border-radius: 10px; border: 1px solid #e0e4e8; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .table-custom th { background-color: #f1f3f5; text-align: center; vertical-align: middle; }
-
-  /* Tampilan Layar Tunggal */
+  
+  /* Kelas pembantu tampilan layar penuh tunggal */
   .screen-container {
     min-height: 90vh;
     display: flex;
@@ -30,114 +30,104 @@
     width: 15px;
   }
 
-  #empName, #empNip, #empPosition, #empUnit {
-    pointer-events: none !important;
-    background-color: #e9ecef !important;
-    color: #495057 !important;
-    border: 1px solid #ced4da !important;
-    user-select: none !important;
+    #empName, #empNip, #empPosition, #empUnit {
+    pointer-events: none !important;      /* Mematikan klik, kursor, dan fokus keyboard */
+    background-color: #e9ecef !important; /* Warna abu-abu soft tanda terkunci */
+    color: #495057 !important;            /* Warna teks tetap jelas terbaca */
+    border: 1px solid #ced4da !important;  /* Tampilan form terikat rapi */
+    user-select: none !important;         /* Mencegah teks diblok/di-highlight */
   }
-
-  h4 { font-size: 14px; }
-  h6 { font-size: 12px; }
-
-  .area-ttd {
-    margin-top: -8px !important;
-  }
-
+  
   @media print {
-    @page {
-      margin: 1cm 0.7cm;
-    }
-
-    .no-print, .no-print * { display: none !important; }
-    body {
-      background-color: white !important;
-      padding: 0 !important;
-      font-size: 12px !important;
-    }
-    .card { border: none !important; box-shadow: none !important; padding: 0 !important; }
-    .bg-light {
-      margin-bottom: 2px !important;
-      padding: 4px !important;
-    }
-
-    .card, .card-body {
-      padding-left: 0 !important;
-      margin-left: 0 !important;
-    }
-
-    table th:first-child,
-    table td:first-child {
-      padding-left: 0 !important;
-    }
-
-    table,
-    .table,
-    .table-responsive {
-      margin-bottom: 0 !important;
-      overflow: visible !important;
-    }
-
-    table td, table th {
-      padding-top: 2px !important;
-      padding-bottom: 2px !important;
-      line-height: 1.2 !important;
-      padding-left: 0 !important;
-      border: 1px solid #000 !important;
-    }
-
-    .d-print-block.mt-4,
-    div[class*="d-print-block"] {
-      margin-top: -5px !important;
-    }
-
-    .d-print-block .row.mb-4 {
-      margin-bottom: 4px !important;
-    }
-
-    .d-print-block .mt-4 {
-      margin-top: 8px !important;
-    }
-
-    .d-print-block .mt-5 {
-      margin-top: 66px !important; /* Ruang untuk tanda tangan fisik */
-    }
-
-    .kolom-kanan-ttd {
-      padding-left: 300px !important;
-    }
-
-    #appContent, .container {
-      max-width: 100% !important;
-      width: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-
-    .d-flex.justify-content-between {
-      justify-content: center !important;
-    }
-
-    #mainReportTitle,
-    #mainReportMonth,
-    h1, h2, h3, .header-title {
-      text-align: center !important;
-      width: 100% !important;
-    }
-    #mainReportMonth {
-      margin-bottom: 10px !important;
-    }
-
-    #btnHapusTerpilih { display: none !important; }
+  /* 1. Sembunyikan elemen non-cetak (Tombol Menu & Keluar) */
+  .no-print, .no-print * { 
+    display: none !important; 
   }
+
+  /* 2. Pengaturan halaman dasar */
+  body { 
+    background-color: white !important; 
+    padding: 0 !important; 
+    font-size: 11px !important; 
+  }
+
+  .card { 
+    border: none !important; 
+    box-shadow: none !important; 
+    padding: 0 !important;
+    margin-bottom: 15px !important;
+  }
+
+  table { 
+    font-size: 10px !important;
+    margin-top: 15px !important; /* Ubah nilainya (15px - 20px) sesuai jarak yang diinginkan */
+  }
+
+  table, table th, table td {
+    border: 1px solid #000 !important;
+    border-color: #000 !important;
+  }
+    
+  #appContent, .container { 
+    max-width: 100% !important; 
+    width: 100% !important; 
+    margin: 0 !important; 
+    padding: 0 !important; 
+  }
+
+  /* 3. Membuat Judul & Subjudul Rata Tengah */
+  .d-flex.justify-content-between {
+    justify-content: center !important;
+  }
+
+  #mainReportTitle, 
+  #mainReportMonth,
+  h1, h2, h3, .header-title {
+    text-align: center !important;
+    width: 100% !important;
+  }
+  #mainReportMonth {
+    margin-bottom: 20px !important; /* Sesuaikan nilainya (misal: 15px - 25px) */
+  }
+    
+  /* 4. Merapatkan jarak antarbaris data pegawai */
+  .profile-item,
+  .d-flex.align-items-center {
+    margin-bottom: 1px !important; /* Nilai kecil agar baris sangat rapat */
+    line-height: 1.1 !important;
+  }
+
+  /* 5. Menghilangkan border input & merapatkan ukuran font/padding */
+  #empName, #empNip, #empPosition, #empUnit {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: unset !important;
+    box-shadow: none !important;
+    font-size: 11px !important;
+  }
+
+    .ttd-kiri {
+    text-align: left !important;
+    width: 45% !important;
+  }
+
+  .ttd-kanan {
+    text-align: left !important; /* Semua teks di dalamnya otomatis rata kiri & sejajar */
+    width: 180px !important;     /* Menentukan lebar tetap agar lurus tegak */
+    margin-left: auto !important;/* Mendorong seluruh blok ke ujung kanan */
+    transform: translateX(20px) !important;
+  }
+}
 </style>
 </head>
 <body class="p-3 p-md-4">
 
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuKxo96lbLXPeAcOu4zv50kKh9xj0EXGzkQWpQn9n6C-NZLGmLcqw2zBV9_xPtriSF/exec";
-  const WA_CS_NUMBER = "6285696454569";
+  const WA_CS_NUMBER = "6285696454569"; // format: 628xxxxxxxxxx
 </script>
 
 <!-- LAYAR LOADING AWAL -->
@@ -146,7 +136,7 @@
   <p class="mt-2 text-muted">Memuat...</p>
 </div>
 
-<!-- 1. LAYAR LOGIN / DAFTAR -->
+<!-- 1. LAYAR LOGIN / DAFTAR (Halaman utama pengunjung) -->
 <div id="loginScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 380px; width: 100%;">
     <h5 class="fw-bold text-center mb-3">🔑 Laporan Kinerja</h5>
@@ -155,8 +145,8 @@
       <li class="nav-item"><button class="nav-link active" id="tabMasuk" onclick="gantiTabLogin('masuk')">Masuk</button></li>
       <li class="nav-item"><button class="nav-link" id="tabNipCepat" onclick="gantiTabLogin('nipcepat')">Masuk NIP</button></li>
       <div class="mt-3 text-center" style="display: none !important;">
-        <li class="nav-item"><button class="nav-link" id="tabDaftar" onclick="gantiTabLogin('daftar')">Daftar</button></li>
-      </div>
+      <li class="nav-item"><button class="nav-link" id="tabDaftar" onclick="gantiTabLogin('daftar')">Daftar</button></li>
+      </div>    
     </ul>
 
     <div id="formMasuk">
@@ -182,7 +172,7 @@
   </div>
 </div>
 
-<!-- 2. LAYAR DASHBOARD MENU -->
+<!-- 2. LAYAR DASHBOARD MENU (Setelah berhasil login) -->
 <div id="dashboardScreen" class="screen-container d-none">
   <div class="card p-4" style="max-width: 420px; width: 100%;">
     <h5 class="fw-bold text-center mb-1">Selamat datang</h5>
@@ -203,25 +193,26 @@
     <p class="text-muted small text-center mb-3">Pilih salah satu opsi di bawah ini:</p>
 
     <div class="form-check border rounded p-3 mb-2">
-      <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPakaiNip" value="nip" checked onchange="toggleInputNip()">
-      <label class="form-check-label fw-semibold" for="opsiPakaiNip">Gunakan NIP</label>
-      <p class="small text-muted mb-2">Isi sekali, tersimpan permanen, otomatis terisi tiap login (device apa pun).</p>
-      <div id="opsiNipFields">
-        <input type="text" id="opsiNamaLengkap" class="form-control form-control-sm mb-2" placeholder="Nama Lengkap dan Gelar">
-        <input type="text" id="opsiNipInput" class="form-control form-control-sm mb-2" placeholder="NIP">
-        <input type="text" id="opsiJabatan" class="form-control form-control-sm mb-2" placeholder="Jabatan">
-        <input type="text" id="opsiUnitKerja" class="form-control form-control-sm mb-2" placeholder="Unit Kerja">
-        <hr>
-        <input type="text" id="opsiSignerJabatan" class="form-control form-control-sm mb-2" placeholder="Jabatan Pejabat Penandatangan">
-        <input type="text" id="opsiSignerName" class="form-control form-control-sm mb-2" placeholder="Nama Pejabat Penandatangan">
-        <input type="text" id="opsiSignerNip" class="form-control form-control-sm mb-2" placeholder="NIP Pejabat Penandatangan">
-        <input type="text" id="opsiSignerTempat" class="form-control form-control-sm" placeholder="Tempat Pengesahan">
-      </div>
-    </div>
+  <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPakaiNip" value="nip" checked onchange="toggleInputNip()">
+  <label class="form-check-label fw-semibold" for="opsiPakaiNip">Gunakan NIP</label>
+  <p class="small text-muted mb-2">Isi sekali, tersimpan permanen, otomatis terisi tiap login (device apa pun).</p>
+  <div id="opsiNipFields">
+    <input type="text" id="opsiNamaLengkap" class="form-control form-control-sm mb-2" placeholder="Nama Lengkap dan Gelar">
+    <input type="text" id="opsiNipInput" class="form-control form-control-sm mb-2" placeholder="NIP">
+    <input type="text" id="opsiJabatan" class="form-control form-control-sm mb-2" placeholder="Jabatan">
+    <input type="text" id="opsiUnitKerja" class="form-control form-control-sm mb-2" placeholder="Unit Kerja">
+    <hr>
+    <input type="text" id="opsiSignerJabatan" class="form-control form-control-sm mb-2" placeholder="Jabatan Pejabat Penandatangan">
+    <input type="text" id="opsiSignerName" class="form-control form-control-sm mb-2" placeholder="Nama Pejabat Penandatangan">
+    <input type="text" id="opsiSignerNip" class="form-control form-control-sm mb-2" placeholder="NIP Pejabat Penandatangan">
+    <input type="text" id="opsiSignerTempat" class="form-control form-control-sm" placeholder="Tempat Pengesahan">
+  </div>
+</div>
 
     <div class="form-check border rounded p-3 mb-3" style="display: none !important;">
       <input class="form-check-input" type="radio" name="opsiLogin" id="opsiPassword" value="password" onchange="toggleInputNip()">
       <label class="form-check-label fw-semibold" for="opsiPassword">Hanya Password</label>
+      <p class="small text-muted mb-0">Profil diisi manual sendiri. NIP tidak disetorkan ke sistem.</p>
     </div>
 
     <button id="btnSimpanOpsi" class="btn btn-primary w-100 fw-semibold mb-2" onclick="simpanOpsiLogin()">Simpan</button>
@@ -266,130 +257,102 @@
   </div>
 </div>
 
-<!-- 6. KONTEN UTAMA APLIKASI LKH / LKB -->
+<!-- 6. UTAMA: KONTEN APLIKASI LKH / LKB -->
 <div class="container d-none" id="appContent" style="max-width: 900px;">
   <div class="d-flex justify-content-between align-items-start mb-2">
-    <div>
-      <h4 class="fw-bold m-0" id="mainReportTitle">LAPORAN KINERJA HARIAN</h4>
-      <h6 class="fw-bold text-uppercase mt-1 mb-0" id="mainReportMonth">BULAN -</h6>
-    </div>
-    <div class="no-print">
+  <div>
+    <h4 class="fw-bold m-0" id="mainReportTitle">LAPORAN KINERJA HARIAN</h4>
+    <h6 class="fw-bold text-uppercase mt-1 mb-0" id="mainReportMonth">BULAN -</h6>
+  </div>
+  <div class="no-print">
       <button class="btn btn-outline-secondary btn-sm" onclick="backToDashboard()">☰ Menu</button>
       <button class="btn btn-outline-danger btn-sm" onclick="logout()">Keluar</button>
     </div>
-  </div>
+</div>
 
   <div class="text-center mb-3 no-print">
     <span id="statusAksesBadge" class="badge bg-info">Memuat status...</span>
   </div>
 
-  <!-- Profil Identitas Pegawai (Readonly) -->
   <div class="card p-3 mb-3 bg-light">
     <div class="row g-2 small">
       <div class="col-md-6">
         <div class="d-flex align-items-center mb-1"><strong style="width: 85px; flex-shrink:0;">Nama</strong><span class="me-1">:</span>
-          <input id="empName" class="form-control form-control-sm" readonly>
+          <input list="dlNama" id="empName" class="form-control form-control-sm">
+          <datalist id="dlNama"></datalist>
         </div>
         <div class="d-flex align-items-center"><strong style="width: 85px; flex-shrink:0;">Nip</strong><span class="me-1">:</span>
-          <input id="empNip" class="form-control form-control-sm" readonly>
+          <input list="dlNip" id="empNip" class="form-control form-control-sm">
+          <datalist id="dlNip"></datalist>
         </div>
       </div>
       <div class="col-md-6">
         <div class="d-flex align-items-center mb-1"><strong style="width: 85px; flex-shrink:0;">Jabatan</strong><span class="me-1">:</span>
-          <input id="empPosition" class="form-control form-control-sm" readonly>
+          <input list="dlJabatan" id="empPosition" class="form-control form-control-sm">
+          <datalist id="dlJabatan"></datalist>
         </div>
         <div class="d-flex align-items-center"><strong style="width: 85px; flex-shrink:0;">Unit Kerja</strong><span class="me-1">:</span>
-          <input id="empUnit" class="form-control form-control-sm" readonly>
+          <input list="dlUnit" id="empUnit" class="form-control form-control-sm">
+          <datalist id="dlUnit"></datalist>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Form Input Teks / Suara / Gambar -->
   <div class="card p-3 mb-4 no-print">
     <label class="form-label fw-bold small">Input Kegiatan Baru (Voice Note / Teks):</label>
     <textarea id="userInput" class="form-control mb-2" rows="2" placeholder="Contoh: Hari ini saya melakukan koordinasi dengan imam masjid, menyusun laporan bulanan, dan rapat evaluasi."></textarea>
-
-    <div class="mb-2">
-      <label class="form-label small mb-1">📷 Atau lampirkan gambar (foto kamera / screenshot / galeri):</label>
-      <input type="file" id="inputGambar" accept="image/*" class="form-control form-control-sm" onchange="previewGambar()">
-      <div id="previewGambarWrap" class="mt-2 d-none">
-        <img id="previewGambar" alt="Pratinjau" style="max-height:140px; max-width:100%; border-radius:6px; border:1px solid #dee2e6;">
-        <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="hapusGambar()">✕ Hapus gambar</button>
-      </div>
-      <small class="text-muted">Teks di atas boleh diisi sebagai keterangan tambahan (mis. tanggal atau tempat).</small>
-    </div>
-
     <div class="d-flex justify-content-between align-items-center">
       <small class="text-muted small">🎙️ Tekan ikon mikrofon pada keyboard HP untuk rekaman suara.</small>
       <button id="btnSubmit" class="btn btn-primary btn-sm px-4" onclick="submitData()">Proses & Simpan</button>
     </div>
   </div>
 
-  <!-- Area Data & Tabel -->
   <div class="card p-3 mb-4">
-
-    <!-- Dropdown Filter Bulan -->
-    <div class="d-flex align-items-center gap-2 mb-2 no-print">
-      <label class="small fw-bold mb-0" for="pilihBulan">📆 Bulan:</label>
-      <select id="pilihBulan" class="form-select form-select-sm" style="max-width:220px;" onchange="gantiBulan()">
-        <option value="">Memuat...</option>
-      </select>
-      <small class="text-muted">Default: bulan berjalan</small>
-    </div>
-
-    <!-- Navigasi Tab -->
     <ul class="nav nav-tabs mb-3 no-print" role="tablist">
       <li class="nav-item"><button class="nav-link active fw-bold small" data-bs-toggle="tab" data-bs-target="#harian" type="button" onclick="switchToHarian()">📅 Laporan Harian (LKH)</button></li>
       <li class="nav-item"><button class="nav-link fw-bold small" data-bs-toggle="tab" data-bs-target="#bulanan" type="button" onclick="switchToBulanan()">📊 Laporan Bulanan (LKB)</button></li>
     </ul>
 
-    <!-- Filter Hari/Minggu/Semua & Navigasi Cepat -->
-    <div class="d-flex justify-content-between align-items-center mb-2 no-print">
-      <div class="btn-group btn-group-sm" role="group">
-        <button type="button" class="btn btn-outline-secondary" onclick="scrollKeInput()">⬆️ Ke Input</button>
-        <button type="button" id="btnFilterHari" class="btn btn-outline-primary" onclick="gantiFilterHarian('hari')">📆 Hari Ini</button>
-        <button type="button" id="btnFilterMinggu" class="btn btn-outline-primary active" onclick="gantiFilterHarian('minggu')">📅 Minggu Ini</button>
-        <button type="button" id="btnFilterSemua" class="btn btn-outline-primary" onclick="gantiFilterHarian('semua')">📋 Semua Data</button>
-        <button type="button" class="btn btn-outline-danger" onclick="scrollKeCetak()">📄 Ke Cetak</button>
-        <button type="button" id="btnHapusTerpilih" class="btn btn-outline-danger" onclick="hapusTerpilih()" disabled>🗑️ Hapus (<span id="jumlahTerpilih">0</span>)</button>
-      </div>
+    <div class="btn-group btn-group-sm mb-2 no-print" role="group">
+      <button type="button" class="btn btn-outline-secondary" onclick="scrollKeInput()">⬆️ Ke Input</button>
+      <button type="button" id="btnFilterHari" class="btn btn-outline-primary" onclick="gantiFilterHarian('hari')">📆 Hari Ini</button>
+      <button type="button" id="btnFilterMinggu" class="btn btn-outline-primary active" onclick="gantiFilterHarian('minggu')">📅 Minggu Ini</button>
+      <button type="button" id="btnFilterSemua" class="btn btn-outline-primary" onclick="gantiFilterHarian('semua')">📋 Semua Data</button>
+      <button type="button" class="btn btn-outline-danger" onclick="scrollKeCetak()">📄 Ke Cetak</button>
     </div>
 
     <div class="tab-content">
-      <!-- TAB HARIAN -->
       <div class="tab-pane fade show active" id="harian" role="tabpanel">
+        <div class="d-flex justify-content-end mb-2 no-print">
+          <button id="btnHapusTerpilih" class="btn btn-outline-danger btn-sm" onclick="hapusTerpilih()" disabled>
+            🗑️ Hapus Terpilih (<span id="jumlahTerpilih">0</span>)
+          </button>
+        </div>
         <div class="table-responsive">
           <table class="table table-bordered table-custom small">
             <thead>
               <tr>
-                <th width="5%" class="no-print text-center"><input type="checkbox" id="checkAllHarian" onclick="toggleAllHarian(this)"></th>
-                <th width="6%">No</th>
-                <th width="16%">Hari/Tanggal</th>
+                <th width="6%" class="no-print text-center"><input type="checkbox" id="checkAllHarian" onclick="toggleAllHarian(this)"></th>
+                <th width="5%">No</th>
+                <th width="14%">Hari/Tanggal</th>
                 <th>Uraian Kegiatan</th>
-                <th width="10%">Jml Output</th>
-                <th width="10%">Satuan</th>
-                <th width="10%" class="no-print">Aksi</th>
+                <th width="8%">Output</th>
+                <th width="9%">Satuan</th>
               </tr>
             </thead>
             <tbody id="tableHarianBody">
-              <tr><td colspan="7" class="text-center text-muted">Memuat data...</td></tr>
+              <tr><td colspan="6" class="text-center text-muted">Memuat data...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- TAB BULANAN -->
       <div class="tab-pane fade" id="bulanan" role="tabpanel">
         <div class="table-responsive">
           <table class="table table-bordered table-custom small">
             <thead>
-              <tr>
-                <th width="6%">No.</th>
-                <th>Uraian Pekerjaan</th>
-                <th width="16%">Jml. Output</th>
-                <th width="16%">Satuan</th>
-              </tr>
+              <tr><th width="6%">No.</th><th>Uraian Pekerjaan</th><th width="16%">Jml. Output</th><th width="16%">Satuan</th></tr>
             </thead>
             <tbody id="tableBulananBody">
               <tr><td colspan="4" class="text-center text-muted">Memuat rekapitulasi...</td></tr>
@@ -398,75 +361,43 @@
         </div>
       </div>
     </div>
+
+    <div class="no-print mt-3">
+      <hr>
+      <h6 class="fw-bold small mb-2">⚙️ Identitas Penandatangan & Pengesahan Dokumen</h6>
+      <div class="row g-2 mb-2">
+        <div class="col-md-3"><input type="text" id="signerName" class="form-control form-control-sm" placeholder="Nama Pejabat Penandatangan" list="dlSignerName"><datalist id="dlSignerName"></datalist></div>
+        <div class="col-md-3"><input type="text" id="signerNip" class="form-control form-control-sm" placeholder="NIP Pejabat Penandatangan" list="dlSignerNip"><datalist id="dlSignerNip"></datalist></div>
+        <div class="col-md-3"><input type="text" id="signerJabatan" class="form-control form-control-sm" placeholder="Jabatan" list="dlSignerJabatan"><datalist id="dlSignerJabatan"></datalist></div>
+        <div class="col-md-3"><input type="text" id="signerTempat" class="form-control form-control-sm" placeholder="Tempat Pengesahan" list="dlSignerTempat"><datalist id="dlSignerTempat"></datalist></div>
+      </div>
+      <div class="row g-2 mb-3">
+        <div class="col-md-3"><input type="date" id="approvalDate" class="form-control form-control-sm"></div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="window.print()">📄 Cetak / Download PDF</button>
+    </div>
+
+   <div class="d-none d-print-block mt-4">
+  <div class="d-flex justify-content-between align-items-end">
+    
+    <!-- KOTAK KIRI: ATASAN -->
+    <div class="ttd-kiri">
+      <p class="mb-0">Atasan Langsung</p>
+      <p class="mb-5" id="printSignerTitle">-</p>
+      <p class="fw-bold mb-0" id="printSignerName">____________________</p>
+      <p class="small mb-0" id="printSignerNip">NIP. -</p>
+    </div>
+
+    <!-- KOTAK KANAN: PEGAWAI (DIBUNGKUS SATU CONTAINER) -->
+    <div class="ttd-kanan">
+      <p class="mb-1"><span id="printTempat">-</span>, <span id="printDate">-</span></p>
+      <p class="mb-5" style="font-size: 0.75rem;">Pegawai yang Bersangkutan</p>
+      <p class="fw-bold mb-0" id="printEmpName">-</p>
+      <p class="small mb-0" id="printEmpNip">NIP. -</p>
+    </div>
+
   </div>
-
-  <!-- Pengaturan Tanda Tangan Cetak -->
-  <div class="no-print mt-3">
-    <hr>
-    <h6 class="fw-bold small mb-2">⚙️ Identitas Penandatangan & Pengesahan Dokumen</h6>
-    <div class="row g-2 mb-2">
-      <div class="col-md-3"><input type="text" id="signerName" class="form-control form-control-sm" placeholder="Nama Pejabat Penandatangan" list="listSignerName"><datalist id="listSignerName"></datalist></div>
-      <div class="col-md-3"><input type="text" id="signerNip" class="form-control form-control-sm" placeholder="NIP Pejabat Penandatangan" list="listSignerNip"><datalist id="listSignerNip"></datalist></div>
-      <div class="col-md-3"><input type="text" id="signerJabatan" class="form-control form-control-sm" placeholder="Jabatan" list="listSignerJabatan"><datalist id="listSignerJabatan"></datalist></div>
-      <div class="col-md-3"><input type="text" id="signerTempat" class="form-control form-control-sm" placeholder="Tempat Pengesahan" list="listSignerTempat"><datalist id="listSignerTempat"></datalist></div>
-    </div>
-    <div class="row g-2 mb-3">
-      <div class="col-md-3"><input type="date" id="approvalDate" class="form-control form-control-sm"></div>
-    </div>
-    <button class="btn btn-danger btn-sm" onclick="window.print()">📄 Cetak / Download PDF</button>
-  </div>
-
-  <!-- AREA TANDA TANGAN CETAK -->
-  <div class="d-none d-print-block mt-4">
-    <div class="row mb-4">
-      <div class="col-3"></div>
-      <div class="col-9 kolom-kanan-ttd">
-        <p class="mb-0"><span id="printTempat">-</span>, <span id="printDate">-</span></p>
-      </div>
-    </div>
-
-    <div class="row mt-4">
-      <div class="col-6">
-        <p class="mb-0">Atasan Langsung</p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-3">
-        <p class="mb-0" id="printSignerTitle">-</p>
-      </div>
-      <div class="col-9 kolom-kanan-ttd">
-        <p class="mb-0 text-nowrap" style="font-size: 0.70rem;">Pegawai yang Bersangkutan</p>
-      </div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-3">
-        <p class="fw-bold mb-0 text-nowrap" id="printSignerName">____________________</p>
-        <p class="small mb-0" id="printSignerNip">NIP. -</p>
-      </div>
-      <div class="col-9 kolom-kanan-ttd">
-        <p class="fw-bold mb-0" id="printEmpName">-</p>
-        <p class="small mb-0" id="printEmpNip">NIP. -</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL LAPORAN DETIL -->
-  <div class="modal fade" id="modalLaporanDetil" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title fw-bold" id="judulModalDetil">Laporan Detil</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body" id="isiModalDetil"></div>
-        <div class="modal-footer" id="footerModalDetil"></div>
-      </div>
-    </div>
-  </div>
-
-</div> <!-- penutup: #appContent -->
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -476,34 +407,18 @@ let isManualProfile = false;
 let pendingUsername = null;
 let currentAkses = null;
 let currentUseNip = false;
-
 let dataHarianTerakhir = [];
 let filterHarianMode = 'minggu';
 let filterHarianSebelumPrint = null;
 
-const BULAN_UPPER = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
-let bulanTerpilih = '';
-
-// ==========================================================
-// API CALLER KE GOOGLE APPS SCRIPT (POST, body text/plain)
-// text/plain dipakai agar browser tidak melakukan preflight CORS.
-// Data besar (gambar base64) aman karena lewat body, bukan URL.
-// ==========================================================
 async function callApi(action, params = {}) {
-  const response = await fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: action, params: params })
-  });
+  const url = APPS_SCRIPT_URL + '?action=' + encodeURIComponent(action) + '&params=' + encodeURIComponent(JSON.stringify(params));
+  const response = await fetch(url, { method: 'GET' });
   const responseText = await response.text();
   if (!response.ok) {
     throw new Error('HTTP ' + response.status + ' - Isi respons: ' + responseText.substring(0, 300));
   }
-  try {
-    return JSON.parse(responseText);
-  } catch (e) {
-    throw new Error('Respons server bukan JSON: ' + responseText.substring(0, 200));
-  }
+  return JSON.parse(responseText);
 }
 
 function tampilkanAlert(elId, pesan) {
@@ -515,6 +430,7 @@ function sembunyikanAlert(elId) {
   document.getElementById(elId).classList.add('d-none');
 }
 
+/* Fungsi sakelar layar murni menggunakan utility Bootstrap */
 function sembunyikanSemuaLayar() {
   ['loadingScreen','loginScreen','dashboardScreen','pilihOpsiScreen','statusAkunScreen','lockedScreen','appContent'].forEach(id => {
     const el = document.getElementById(id);
@@ -540,7 +456,7 @@ function gantiTabLogin(mode) {
 
 window.onload = function() {
   document.getElementById('approvalDate').valueAsDate = new Date();
-  muatHistoriDropdown();
+  updateBulanBerjalan();
 
   const savedUsername = localStorage.getItem('lkh_username');
   if (savedUsername) {
@@ -619,11 +535,20 @@ async function prosesDaftar() {
     const res = await callApi('registerAccount', { username: u, password: p });
     btn.disabled = false; btn.innerText = "Daftar";
     if (res.success) {
-      tampilkanAlert('loginAlert', "Pendaftaran berhasil! Silakan masuk.");
-      if (document.getElementById('loginUsername')) document.getElementById('loginUsername').value = u;
+      // 1. Berikan notifikasi sukses
+      tampilkanAlert('loginAlert', "Pendaftaran berhasil! Silakan masuk.", "success");
+      
+      // 2. Isi otomatis username yang baru didaftarkan ke form Login (opsional)
+      if (document.getElementById('loginUsername')) {
+        document.getElementById('loginUsername').value = u;
+      }
+      
+      // 3. Bersihkan form pendaftaran
       document.getElementById('daftarUsername').value = '';
       document.getElementById('daftarPassword').value = '';
-      gantiTabLogin('masuk');
+
+      // 4. Dialihkan ke layar Masuk / Login
+      tampilkanLayar('loginScreen');
     } else {
       tampilkanAlert('loginAlert', res.error || "Gagal mendaftar.");
     }
@@ -632,7 +557,6 @@ async function prosesDaftar() {
     tampilkanAlert('loginAlert', "Error koneksi: " + err.message);
   }
 }
-
 function toggleInputNip() {
   const pakaiNip = document.getElementById('opsiPakaiNip').checked;
   document.getElementById('opsiNipFields').style.display = pakaiNip ? 'block' : 'none';
@@ -683,7 +607,7 @@ function tampilkanLayarTerkunci(alasan) {
 
 function masukKeAplikasi(res) {
   currentUsername = res.username;
-  currentUseNip = !!res.useNip;
+  currentUseNip = true;
   currentUserProfile = res.profile;
   currentAkses = res.akses;
 
@@ -692,6 +616,28 @@ function masukKeAplikasi(res) {
     return;
   }
 
+// 1. SEMBUNYIKAN / KUNCI TOMBOL MENU "PILIH CARA ISI PROFIL" JIKA NIP SUDAH ADA
+  const btnPilihOpsi = document.getElementById('btnMenuPilihOpsi') || document.querySelector('[onclick*="bukaOpsi"]');
+  if (btnPilihOpsi) {
+    if (res.profile && res.profile.nip) {
+      btnPilihOpsi.style.display = 'none'; // Sembunyikan tombol jika profil NIP sudah terikat
+    } else {
+      btnPilihOpsi.style.display = 'block'; // Tampilkan hanya jika profil belum pernah diisi
+    }
+  }
+  
+  // 1. Kunci semua kolom input profil & hapus daftar rekomendasi (datalist)
+  const fields = ['empName', 'empNip', 'empPosition', 'empUnit'];
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.setAttribute('readonly', true); // Kunci agar tidak bisa diketik
+      el.removeAttribute('list');        // Hapus dropdown pilihan nama lokal
+      el.value = '';                     // Bersihkan sisa nilai lama
+    }
+  });
+
+  // 2. Isi data profil resmi yang berasal dari server
   if (res.profile) {
     document.getElementById('empName').value = res.profile.nama || '';
     document.getElementById('empNip').value = res.profile.nip || '';
@@ -699,6 +645,7 @@ function masukKeAplikasi(res) {
     document.getElementById('empUnit').value = res.profile.unitKerja || '';
   }
 
+  // 3. Isi data pejabat penandatangan jika ada
   if (res.signer) {
     document.getElementById('signerJabatan').value = res.signer.jabatan || '';
     document.getElementById('signerName').value = res.signer.name || '';
@@ -708,7 +655,7 @@ function masukKeAplikasi(res) {
 
   tampilkanDashboard();
 }
-
+  
 function tampilkanDashboard() {
   document.getElementById('dashboardUsername').innerText = 'Masuk sebagai: ' + currentUsername;
   tampilkanLayar('dashboardScreen');
@@ -719,9 +666,10 @@ function backToDashboard() {
 }
 
 function bukaOpsiDariDashboard() {
+  // Cek apakah akun sudah terikat dengan data NIP/Profil
   if (currentUserProfile && currentUserProfile.nip) {
     alert("Profil Anda sudah terikat permanen dengan NIP " + currentUserProfile.nip + " dan tidak dapat diubah lagi.");
-    return;
+    return; // Hentikan eksekusi, layar ubah profil tidak akan terbuka
   }
 
   pendingUsername = currentUsername;
@@ -738,7 +686,8 @@ function bukaLKH() {
   }
   tampilkanLayar('appContent');
   if (currentAkses) tampilkanStatusAkses(currentAkses);
-  muatDropdownBulan(true);
+  loadHarian();
+  loadBulanan();
 }
 
 function bukaStatusAkun() {
@@ -771,6 +720,24 @@ function tampilkanStatusAkses(akses) {
   }
 }
 
+function simpanHistori(fieldId, datalistId) {
+  const val = document.getElementById(fieldId).value.trim();
+  if (!val) return;
+  localStorage.setItem('hist_' + fieldId + '_last', val);
+  let arr = JSON.parse(localStorage.getItem('hist_' + fieldId) || '[]');
+  if (!arr.includes(val)) {
+    arr.unshift(val);
+    arr = arr.slice(0, 10);
+    localStorage.setItem('hist_' + fieldId, JSON.stringify(arr));
+  }
+  muatDatalistHistori(fieldId, datalistId);
+}
+function muatDatalistHistori(fieldId, datalistId) {
+  const arr = JSON.parse(localStorage.getItem('hist_' + fieldId) || '[]');
+  const dl = document.getElementById(datalistId);
+  if (dl) dl.innerHTML = arr.map(v => `<option value="${v.replace(/"/g,'&quot;')}">`).join('');
+}
+
 function logout() {
   localStorage.removeItem('lkh_username');
   currentUsername = null;
@@ -782,177 +749,23 @@ function logout() {
   tampilkanLayar('loginScreen');
 }
 
-// ==========================================================
-// LOGIKA BULAN & FILTER
-// ==========================================================
-function keyDariTanggal(d) {
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-}
-function keyBulanIni() { return keyDariTanggal(new Date()); }
-
-function labelBulan(key) {
-  if (key === 'semua') return 'SEMUA BULAN';
-  const parts = key.split('-');
-  return BULAN_UPPER[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
-}
-
-function updateBulanBerjalan() {
-  document.getElementById('mainReportMonth').innerText =
-    bulanTerpilih === 'semua' ? 'SEMUA BULAN' : 'BULAN ' + labelBulan(bulanTerpilih);
-}
-
-function setModeFilter(mode) {
-  filterHarianMode = mode;
-  document.getElementById('btnFilterHari').classList.toggle('active', mode === 'hari');
-  document.getElementById('btnFilterMinggu').classList.toggle('active', mode === 'minggu');
-  document.getElementById('btnFilterSemua').classList.toggle('active', mode === 'semua');
-}
-
-function sesuaikanFilterDenganBulan() {
-  if (bulanTerpilih !== keyBulanIni()) {
-    setModeFilter('semua');
-  }
-}
-
-async function muatDropdownBulan(resetKeDefault) {
-  if (resetKeDefault) bulanTerpilih = keyBulanIni();
-  try {
-    const res = await callApi('getDaftarBulan', { nip: currentUsername });
-    const sel = document.getElementById('pilihBulan');
-    const keys = Array.isArray(res) ? res.slice() : (res.daftar || []).slice();
-    if (bulanTerpilih !== 'semua' && !keys.includes(bulanTerpilih)) keys.push(bulanTerpilih);
-    keys.sort().reverse();
-
-    sel.innerHTML = '';
-    keys.forEach(function(k) {
-      const opt = document.createElement('option');
-      opt.value = k;
-      opt.textContent = labelBulan(k);
-      sel.appendChild(opt);
-    });
-    const optSemua = document.createElement('option');
-    optSemua.value = 'semua';
-    optSemua.textContent = 'Semua Bulan';
-    sel.appendChild(optSemua);
-
-    sel.value = bulanTerpilih;
-    updateBulanBerjalan();
-
-    if (resetKeDefault) {
-      sesuaikanFilterDenganBulan();
-      loadHarian();
-      loadBulanan();
-    }
-  } catch (err) {
-    if (resetKeDefault) {
-      updateBulanBerjalan();
-      sesuaikanFilterDenganBulan();
-      loadHarian();
-      loadBulanan();
-    }
-  }
-}
-
-function gantiBulan() {
-  bulanTerpilih = document.getElementById('pilihBulan').value;
-  updateBulanBerjalan();
-  sesuaikanFilterDenganBulan();
-  loadHarian();
-  loadBulanan();
-}
-
-function switchToHarian() {
-  document.getElementById('mainReportTitle').innerText = "LAPORAN KINERJA HARIAN";
-  loadHarian();
-}
-function switchToBulanan() {
-  document.getElementById('mainReportTitle').innerText = "LAPORAN KINERJA BULANAN";
-  loadBulanan();
-}
-
-// ==========================================================
-// PROSES TEKS, VOICE NOTE, DAN GAMBAR
-// ==========================================================
-
-function bacaSebagaiDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Gagal membaca file gambar."));
-    reader.onload = () => resolve(reader.result);
-    reader.readAsDataURL(file);
-  });
-}
-
-/**
- * Selalu perkecil gambar (sisi terpanjang maks `maxSisi` px) dan simpan sebagai JPEG.
- * Hasil umumnya 200-500 KB, aman untuk dikirim lewat POST dan cepat diproses Gemini.
- */
-async function kompresGambar(file, maxSisi, kualitas) {
-  maxSisi = maxSisi || 1600;
-  kualitas = kualitas || 0.8;
-
-  const srcUrl = await bacaSebagaiDataUrl(file);
-  const img = await new Promise((resolve, reject) => {
-    const im = new Image();
-    im.onerror = () => reject(new Error("File bukan gambar yang valid (atau format belum didukung browser)."));
-    im.onload = () => resolve(im);
-    im.src = srcUrl;
-  });
-
-  const skala = Math.min(1, maxSisi / Math.max(img.width, img.height));
-  const canvas = document.createElement('canvas');
-  canvas.width = Math.max(1, Math.round(img.width * skala));
-  canvas.height = Math.max(1, Math.round(img.height * skala));
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff'; // latar putih agar PNG transparan tidak jadi hitam
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  return canvas.toDataURL('image/jpeg', kualitas);
-}
-
-function previewGambar() {
-  const input = document.getElementById('inputGambar');
-  const file = input.files[0];
-  const wrap = document.getElementById('previewGambarWrap');
-  if (!file) { wrap.classList.add('d-none'); return; }
-  document.getElementById('previewGambar').src = URL.createObjectURL(file);
-  wrap.classList.remove('d-none');
-}
-
-function hapusGambar() {
-  document.getElementById('inputGambar').value = '';
-  document.getElementById('previewGambarWrap').classList.add('d-none');
-}
+function switchToHarian() { document.getElementById('mainReportTitle').innerText = "LAPORAN KINERJA HARIAN"; }
+function switchToBulanan() { document.getElementById('mainReportTitle').innerText = "LAPORAN KINERJA BULANAN"; }
 
 async function submitData() {
-  const text = document.getElementById('userInput').value.trim();
-  const file = document.getElementById('inputGambar').files[0];
-  if (!text && !file) return alert("Silakan masukkan teks, dikte suara, atau lampirkan gambar!");
+  const text = document.getElementById('userInput').value;
+  if (!text) return alert("Silakan masukkan teks atau dikte suara!");
 
   const btn = document.getElementById('btnSubmit');
   btn.disabled = true;
-  btn.innerText = file ? "Membaca gambar..." : "Memproses AI...";
-
-  let imageDataUrl = null;
-  if (file) {
-    try {
-      imageDataUrl = await kompresGambar(file, 1600, 0.8);
-    } catch (e) {
-      btn.disabled = false;
-      btn.innerText = "Proses & Simpan";
-      return alert(e.message);
-    }
-    btn.innerText = "Memproses AI...";
-  }
+  btn.innerText = "Memproses AI...";
 
   try {
-    const res = await callApi('processVoiceOrText', { userText: text, imageDataUrl: imageDataUrl, nip: currentUsername });
+    const res = await callApi('processVoiceOrText', { userText: text, nip: currentUsername });
     btn.disabled = false;
     btn.innerText = "Proses & Simpan";
     if (res.success) {
       document.getElementById('userInput').value = "";
-      hapusGambar();
-      muatDropdownBulan(false);
       loadHarian();
       loadBulanan();
       alert("Data berhasil dicatat!");
@@ -970,7 +783,7 @@ async function submitData() {
 
 async function loadHarian() {
   try {
-    const data = await callApi('getLKHData', { nip: currentUsername, bulan: bulanTerpilih });
+    const data = await callApi('getLKHData', { nip: currentUsername });
     if (!Array.isArray(data) && data && data.error) {
       tampilkanLayarTerkunci(String(data.error).replace('Terkunci: ', ''));
       return;
@@ -978,7 +791,7 @@ async function loadHarian() {
     dataHarianTerakhir = data || [];
     renderTabelHarian();
   } catch (err) {
-    document.getElementById('tableHarianBody').innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error: ${err.message}</td></tr>`;
+    document.getElementById('tableHarianBody').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error: ${err.message}</td></tr>`;
   }
 }
 
@@ -993,7 +806,6 @@ function tanggalDalamMingguIni(tglStr) {
   const akhir = new Date(senin); akhir.setDate(senin.getDate() + 6); akhir.setHours(23,59,59,999);
   return tgl >= senin && tgl <= akhir;
 }
-
 function tanggalHariIni(tglStr) {
   const parts = (tglStr || '').split('/');
   if (parts.length !== 3) return true;
@@ -1007,12 +819,12 @@ function renderTabelHarian() {
   tbody.innerHTML = "";
   const data = dataHarianTerakhir;
   if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Belum ada data harian.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Belum ada data harian.</td></tr>';
     updateJumlahTerpilih();
     return;
   }
   let adaBarisTampil = false;
-  data.forEach((row, index) => {
+  data.forEach((row) => {
     if (filterHarianMode === 'hari' && !tanggalHariIni(row[1])) return;
     if (filterHarianMode === 'minggu' && !tanggalDalamMingguIni(row[1])) return;
     adaBarisTampil = true;
@@ -1025,37 +837,29 @@ function renderTabelHarian() {
         <td>${row[2] || ''}</td>
         <td class="text-center">${row[3] !== undefined ? row[3] : ''}</td>
         <td class="text-center">${row[4] || ''}</td>
-        <td class="text-center no-print"><button class="btn btn-sm btn-outline-primary" onclick="bukaLaporanDetil(${index})">📝 Detil</button></td>
       </tr>`;
   });
   if (!adaBarisTampil) {
     const pesan = filterHarianMode === 'hari' ? 'hari ini' : 'minggu ini';
-    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted">Tidak ada kegiatan ${pesan}. <a href="#" onclick="gantiFilterHarian('semua'); return false;">Tampilkan semua data</a></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Tidak ada kegiatan ${pesan}. <a href="#" onclick="gantiFilterHarian('semua'); return false;">Tampilkan semua data</a></td></tr>`;
   }
   updateJumlahTerpilih();
 }
 
 function gantiFilterHarian(mode) {
-  setModeFilter(mode);
+  filterHarianMode = mode;
+  document.getElementById('btnFilterHari').classList.toggle('active', mode === 'hari');
+  document.getElementById('btnFilterMinggu').classList.toggle('active', mode === 'minggu');
+  document.getElementById('btnFilterSemua').classList.toggle('active', mode === 'semua');
   renderTabelHarian();
 }
 
 async function loadBulanan() {
   try {
-    const data = await callApi('getLKBRecap', { nip: currentUsername, bulan: bulanTerpilih });
+    const data = await callApi('getLKBRecap', { nip: currentUsername });
     const tbody = document.getElementById('tableBulananBody');
     tbody.innerHTML = "";
-
-    // Backend bisa mengembalikan objek error (mis. akun terkunci), bukan array
-    if (!Array.isArray(data)) {
-      if (data && data.error) {
-        tampilkanLayarTerkunci(String(data.error).replace('Terkunci: ', ''));
-        return;
-      }
-      tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Belum ada rekapitulasi.</td></tr>';
-      return;
-    }
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
       tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Belum ada rekapitulasi.</td></tr>';
       return;
     }
@@ -1090,22 +894,16 @@ async function hapusTerpilih() {
     const res = await callApi('deleteEntries', { ids: ids, nip: currentUsername });
     if (res.success) {
       document.getElementById('checkAllHarian').checked = false;
-      btn.innerHTML = '🗑️ Hapus (<span id="jumlahTerpilih">0</span>)';
-      muatDropdownBulan(false);
       loadHarian();
       loadBulanan();
     } else {
       alert("Gagal menghapus: " + res.error);
-      btn.disabled = false;
-      btn.innerHTML = '🗑️ Hapus (<span id="jumlahTerpilih">0</span>)';
-      updateJumlahTerpilih();
     }
   } catch (err) {
     alert("Error: " + err.message);
-    btn.disabled = false;
-    btn.innerHTML = '🗑️ Hapus (<span id="jumlahTerpilih">0</span>)';
-    updateJumlahTerpilih();
   }
+  btn.disabled = false;
+  btn.innerText = "🗑️ Hapus Terpilih";
 }
 
 function scrollKeInput() {
@@ -1126,12 +924,15 @@ function formatTanggalIndo(dateStr) {
   return `${parseInt(day)} ${bulanIndo[parseInt(month) - 1]} ${year}`;
 }
 
+function updateBulanBerjalan() {
+  const bulanIndo = ["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
+  const now = new Date();
+  document.getElementById('mainReportMonth').innerText = "BULAN " + bulanIndo[now.getMonth()] + " " + now.getFullYear();
+}
+  
 window.onbeforeprint = function() {
   filterHarianSebelumPrint = filterHarianMode;
   if (filterHarianMode !== 'semua') { filterHarianMode = 'semua'; renderTabelHarian(); }
-
-  document.querySelectorAll('.no-print').forEach(el => el.style.setProperty('display', 'none', 'important'));
-
   const signerNameVal = document.getElementById('signerName').value || '____________________';
   document.getElementById('printSignerName').innerText = signerNameVal;
   document.getElementById('printSignerNip').innerText = 'NIP. ' + (document.getElementById('signerNip').value || '-');
@@ -1141,583 +942,12 @@ window.onbeforeprint = function() {
   document.getElementById('printEmpName').innerText = document.getElementById('empName').value || '-';
   document.getElementById('printEmpNip').innerText = 'NIP. ' + (document.getElementById('empNip').value || '-');
 };
-
 window.onafterprint = function() {
-  document.querySelectorAll('.no-print').forEach(el => el.style.removeProperty('display'));
   if (filterHarianSebelumPrint !== null && filterHarianSebelumPrint !== filterHarianMode) {
-    setModeFilter(filterHarianSebelumPrint);
+    filterHarianMode = filterHarianSebelumPrint;
     renderTabelHarian();
   }
 };
-
-const FIELD_HISTORY_MAP = {
-  signerName: 'listSignerName',
-  signerNip: 'listSignerNip',
-  signerJabatan: 'listSignerJabatan',
-  signerTempat: 'listSignerTempat'
-};
-
-function muatHistoriDropdown() {
-  Object.keys(FIELD_HISTORY_MAP).forEach(fieldId => {
-    const datalistId = FIELD_HISTORY_MAP[fieldId];
-    const saved = JSON.parse(localStorage.getItem('histori_' + fieldId) || '[]');
-    const datalist = document.getElementById(datalistId);
-    if (datalist) {
-      datalist.innerHTML = '';
-      saved.forEach(val => {
-        const opt = document.createElement('option');
-        opt.value = val;
-        datalist.appendChild(opt);
-      });
-    }
-  });
-}
-
-function simpanKeHistori(fieldId) {
-  const value = document.getElementById(fieldId).value.trim();
-  if (!value) return;
-  const key = 'histori_' + fieldId;
-  let saved = JSON.parse(localStorage.getItem(key) || '[]');
-  if (!saved.includes(value)) {
-    saved.unshift(value);
-    saved = saved.slice(0, 10);
-    localStorage.setItem(key, JSON.stringify(saved));
-    muatHistoriDropdown();
-  }
-}
-
-Object.keys(FIELD_HISTORY_MAP).forEach(fieldId => {
-  const el = document.getElementById(fieldId);
-  if (el) {
-    el.addEventListener('blur', function() { simpanKeHistori(fieldId); });
-  }
-});
-
-// ==========================================================
-// MODAL LAPORAN DETIL & PEMBUATAN DOKUMEN (PDF/PNG)
-// ==========================================================
-let modalDetilInstance;
-let kegiatanTerpilih = null;
-
-async function bukaLaporanDetil(index) {
-  const row = dataHarianTerakhir[index];
-  kegiatanTerpilih = { tanggal: row[1], uraian: row[2] };
-
-  if (!modalDetilInstance) modalDetilInstance = new bootstrap.Modal(document.getElementById('modalLaporanDetil'));
-
-  try {
-    const res = await callApi('cariTemplateUntukKegiatan', { uraian: kegiatanTerpilih.uraian });
-    const templateKey = (res && res.templateKey) || null;
-    if (templateKey === 'penyuluhan_tatap_muka') {
-      renderFormPenyuluhan();
-    } else if (templateKey === 'laporan_mingguan') {
-      renderFormLaporanMingguan();
-    } else if (templateKey === 'rencana_mingguan') {
-      renderFormRencana();
-    } else if (['materi_penyuluhan_tatap_muka','materi_bimbingan_konseling','materi_layanan_informasi'].includes(templateKey)) {
-      renderFormMateriTeks(templateKey);
-    } else if (templateKey === 'materi_penyuluhan_medsos') {
-      renderFormInfografis();
-    } else {
-      document.getElementById('judulModalDetil').innerText = "Laporan Detil";
-      document.getElementById('isiModalDetil').innerHTML = `<p class="text-muted">Belum ada template laporan detil untuk kegiatan "<b>${kegiatanTerpilih.uraian}</b>". Template akan ditambahkan secara bertahap.</p>`;
-      document.getElementById('footerModalDetil').innerHTML = `<button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>`;
-    }
-    modalDetilInstance.show();
-  } catch (err) {
-    alert("Gagal memuat template: " + err.message);
-  }
-}
-
-function renderFormPenyuluhan() {
-  document.getElementById('judulModalDetil').innerText = "Laporan Penyuluhan Tatap Muka - " + kegiatanTerpilih.tanggal;
-  document.getElementById('isiModalDetil').innerHTML = `
-    <h6 class="fw-bold small">A. Data Kelompok Binaan, Peserta & Penyelenggara</h6>
-    <div class="row g-2 mb-3">
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_klasifikasi" list="dl_klasifikasi" placeholder="Klasifikasi"><datalist id="dl_klasifikasi"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_jenis" list="dl_jenis" placeholder="Jenis"><datalist id="dl_jenis"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_jumlahPeserta" list="dl_jumlahPeserta" placeholder="Jumlah Peserta"><datalist id="dl_jumlahPeserta"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_alamat" list="dl_alamat" placeholder="Alamat"><datalist id="dl_alamat"></datalist></div>
-      <div class="col-md-4"><input class="form-control form-control-sm" id="f_waktu" list="dl_waktu" placeholder="Waktu"><datalist id="dl_waktu"></datalist></div>
-      <div class="col-md-4"><input class="form-control form-control-sm" id="f_tempat" list="dl_tempat" placeholder="Tempat"><datalist id="dl_tempat"></datalist></div>
-      <div class="col-md-4"><input class="form-control form-control-sm" id="f_penyelenggara" list="dl_penyelenggara" placeholder="Penyelenggara"><datalist id="dl_penyelenggara"></datalist></div>
-      <div class="col-md-4"><input class="form-control form-control-sm" id="f_usia" list="dl_usia" placeholder="Usia Peserta"><datalist id="dl_usia"></datalist></div>
-      <div class="col-md-4"><input class="form-control form-control-sm" id="f_pendidikan" list="dl_pendidikan" placeholder="Pendidikan Peserta"><datalist id="dl_pendidikan"></datalist></div>
-      <div class="col-md-4"><input class="form-control form-control-sm" id="f_pekerjaan" list="dl_pekerjaan" placeholder="Pekerjaan Peserta"><datalist id="dl_pekerjaan"></datalist></div>
-    </div>
-
-    <h6 class="fw-bold small">B. Tujuan, Target & Tema</h6>
-    <div class="row g-2 mb-3">
-      <div class="col-12"><input class="form-control form-control-sm" id="f_tujuan" list="dl_tujuan" placeholder="Tujuan"><datalist id="dl_tujuan"></datalist></div>
-      <div class="col-12"><input class="form-control form-control-sm" id="f_target" list="dl_target" placeholder="Target"><datalist id="dl_target"></datalist></div>
-      <div class="col-12"><input class="form-control form-control-sm" id="f_tema" list="dl_tema" placeholder="Tema"><datalist id="dl_tema"></datalist></div>
-    </div>
-
-    <h6 class="fw-bold small">C. Materi & Pelaksanaan</h6>
-    <div class="row g-2 mb-3">
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_materiLalu" list="dl_materiLalu" placeholder="Topik Minggu Lalu"><datalist id="dl_materiLalu"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_materiIni" list="dl_materiIni" placeholder="Topik Minggu Ini"><datalist id="dl_materiIni"></datalist></div>
-      <div class="col-12"><input class="form-control form-control-sm" id="f_butirBahasan" list="dl_butirBahasan" placeholder="Butir-butir Bahasan"><datalist id="dl_butirBahasan"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_kurikulum" list="dl_kurikulum" placeholder="Jam Menurut Kurikulum"><datalist id="dl_kurikulum"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_realisasi" list="dl_realisasi" placeholder="Jam Realisasi"><datalist id="dl_realisasi"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_metode" list="dl_metode" placeholder="Metode"><datalist id="dl_metode"></datalist></div>
-      <div class="col-md-6"><input class="form-control form-control-sm" id="f_alatBantu" list="dl_alatBantu" placeholder="Alat Bantu"><datalist id="dl_alatBantu"></datalist></div>
-    </div>
-
-    <h6 class="fw-bold small">D. Evaluasi</h6>
-    <div class="row g-2 mb-3">
-      <div class="col-12"><input class="form-control form-control-sm" id="f_masalah" list="dl_masalah" placeholder="Masalah yang Ditemukan"><datalist id="dl_masalah"></datalist></div>
-      <div class="col-12"><input class="form-control form-control-sm" id="f_alternatif" list="dl_alternatif" placeholder="Alternatif Pemecahan"><datalist id="dl_alternatif"></datalist></div>
-    </div>
-
-    <h6 class="fw-bold small">Foto Dokumentasi (opsional, maks 4)</h6>
-    <div class="row g-2 mb-2">
-      <div class="col-6"><label class="small">Foto 1</label><input type="file" accept="image/*" class="form-control form-control-sm" id="f_foto1"></div>
-      <div class="col-6"><label class="small">Foto 2</label><input type="file" accept="image/*" class="form-control form-control-sm" id="f_foto2"></div>
-      <div class="col-6"><label class="small">Foto 3</label><input type="file" accept="image/*" class="form-control form-control-sm" id="f_foto3"></div>
-      <div class="col-6"><label class="small">Foto 4</label><input type="file" accept="image/*" class="form-control form-control-sm" id="f_foto4"></div>
-    </div>
-    <div id="statusGenerate" class="small text-muted"></div>
-  `;
-  document.getElementById('footerModalDetil').innerHTML = `
-    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-    <button class="btn btn-primary" id="btnGenerateLaporan" onclick="submitLaporanPenyuluhan()">Buat Laporan (PDF)</button>
-  `;
-
-  isiDropdownPenyuluhan();
-}
-
-const PENYULUHAN_OPTIONS = {
-  f_klasifikasi: ["Kelompok Binaan", "Kelompok Masyarakat", "Kelompok Keluarga"],
-  f_jenis: ["Kelompok Pengajian", "Majelis Taklim", "Remaja Masjid"],
-  f_jumlahPeserta: ["10", "15", "20", "25", "30"],
-  f_alamat: ["Desa Lolak", "Desa Labuan Uki", "Kelurahan Mongondow"],
-  f_waktu: ["08.00 - 10.00 WITA", "09.00 - 11.00 WITA", "13.00 - 15.00 WITA"],
-  f_tempat: ["Mesjid Desa", "KUA Lolak", "Kantor Kementerian Agama Kabupaten Bolaang Mongondow"],
-  f_penyelenggara: ["Kantor Kementerian Agama Kabupaten Bolaang Mongondow", "KUA Lolak"],
-  f_usia: ["17-30 tahun", "31-50 tahun", "Diatas 50 tahun"],
-  f_pendidikan: ["SD", "SMP", "SMA", "Sarjana"],
-  f_pekerjaan: ["Petani", "Ibu Rumah Tangga", "Wiraswasta", "PNS"],
-  f_tujuan: ["Meningkatkan pemahaman keagamaan masyarakat"],
-  f_target: ["Peserta memahami materi yang disampaikan"],
-  f_tema: ["Akhlak dalam kehidupan sehari-hari", "Keluarga Sakinah"],
-  f_materiLalu: ["Ibadah shalat", "Zakat", "Puasa"],
-  f_materiIni: ["Akhlak", "Muamalah", "Aqidah"],
-  f_butirBahasan: ["Pengertian, dalil, dan penerapan dalam kehidupan sehari-hari"],
-  f_kurikulum: ["2 jam pelajaran"],
-  f_realisasi: ["2 jam pelajaran"],
-  f_metode: ["Ceramah", "Diskusi", "Tanya Jawab", "Ceramah dan Diskusi"],
-  f_alatBantu: ["Mikrofon", "Proyektor", "Buku Panduan"],
-  f_masalah: ["Tidak ada kendala berarti", "Keterbatasan waktu"],
-  f_alternatif: ["Menambah durasi pertemuan berikutnya"]
-};
-
-function isiDropdownPenyuluhan() {
-  Object.keys(PENYULUHAN_OPTIONS).forEach(fieldId => {
-    const datalist = document.getElementById('dl_' + fieldId.replace('f_', ''));
-    if (!datalist) return;
-    datalist.innerHTML = '';
-    PENYULUHAN_OPTIONS[fieldId].forEach(val => {
-      const opt = document.createElement('option');
-      opt.value = val;
-      datalist.appendChild(opt);
-    });
-  });
-}
-
-// Baca foto dari input file, perkecil (maks 1200 px) lalu jadikan base64 JPEG
-async function fileToBase64(fileInput) {
-  const file = fileInput.files[0];
-  if (!file) return null;
-  return await kompresGambar(file, 1200, 0.8);
-}
-
-async function submitLaporanPenyuluhan() {
-  const btn = document.getElementById('btnGenerateLaporan');
-  const statusEl = document.getElementById('statusGenerate');
-  btn.disabled = true;
-  btn.innerText = "Memproses...";
-  statusEl.innerText = "Mengonversi foto & mengirim data...";
-
-  let foto1, foto2, foto3, foto4;
-  try {
-    foto1 = await fileToBase64(document.getElementById('f_foto1'));
-    foto2 = await fileToBase64(document.getElementById('f_foto2'));
-    foto3 = await fileToBase64(document.getElementById('f_foto3'));
-    foto4 = await fileToBase64(document.getElementById('f_foto4'));
-  } catch (e) {
-    btn.disabled = false;
-    btn.innerText = "Buat Laporan (PDF)";
-    statusEl.innerHTML = `<span class="text-danger">Gagal membaca foto: ${e.message}</span>`;
-    return;
-  }
-
-  const formData = {
-    tanggal: kegiatanTerpilih.tanggal,
-    klasifikasi: document.getElementById('f_klasifikasi').value,
-    jenis: document.getElementById('f_jenis').value,
-    jumlahPeserta: document.getElementById('f_jumlahPeserta').value,
-    alamat: document.getElementById('f_alamat').value,
-    waktu: document.getElementById('f_waktu').value,
-    tempat: document.getElementById('f_tempat').value,
-    penyelenggara: document.getElementById('f_penyelenggara').value,
-    usia: document.getElementById('f_usia').value,
-    pendidikan: document.getElementById('f_pendidikan').value,
-    pekerjaan: document.getElementById('f_pekerjaan').value,
-    tujuan: document.getElementById('f_tujuan').value,
-    target: document.getElementById('f_target').value,
-    tema: document.getElementById('f_tema').value,
-    materiLalu: document.getElementById('f_materiLalu').value,
-    materiIni: document.getElementById('f_materiIni').value,
-    butirBahasan: document.getElementById('f_butirBahasan').value,
-    kurikulum: document.getElementById('f_kurikulum').value,
-    realisasi: document.getElementById('f_realisasi').value,
-    metode: document.getElementById('f_metode').value,
-    alatBantu: document.getElementById('f_alatBantu').value,
-    masalah: document.getElementById('f_masalah').value,
-    alternatif: document.getElementById('f_alternatif').value,
-    foto1: foto1, foto2: foto2, foto3: foto3, foto4: foto4,
-    nip: currentUsername
-  };
-
-  statusEl.innerText = "Membuat dokumen PDF di server...";
-  try {
-    const res = await callApi('generateLaporanPenyuluhan', formData);
-    btn.disabled = false;
-    btn.innerText = "Buat Laporan (PDF)";
-    if (res.success) {
-      statusEl.innerHTML = `✅ Berhasil! <a href="${res.pdfUrl}" target="_blank">Buka PDF (${res.pdfName})</a>`;
-    } else {
-      statusEl.innerHTML = `<span class="text-danger">Gagal: ${res.error}</span>`;
-    }
-  } catch (err) {
-    btn.disabled = false;
-    btn.innerText = "Buat Laporan (PDF)";
-    statusEl.innerHTML = `<span class="text-danger">Error: ${err.message}</span>`;
-  }
-}
-
-function renderFormLaporanMingguan() {
-  document.getElementById('judulModalDetil').innerText = "Laporan Mingguan - " + kegiatanTerpilih.tanggal;
-  document.getElementById('isiModalDetil').innerHTML = `
-    <p class="small text-muted">Laporan ini otomatis mengambil kegiatan Senin s.d Jumat pada minggu SEBELUM tanggal kegiatan ini (${kegiatanTerpilih.tanggal}). Pastikan field "⚙️ Identitas Penandatangan & Pengesahan Dokumen" di bawah tabel sudah terisi sebelum generate.</p>
-    <div id="statusGenerateMingguan" class="small text-muted"></div>
-  `;
-  document.getElementById('footerModalDetil').innerHTML = `
-    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-    <button class="btn btn-primary" id="btnGenerateMingguan" onclick="submitLaporanMingguan()">Buat Laporan Mingguan (PDF)</button>
-  `;
-}
-
-async function submitLaporanMingguan() {
-  const btn = document.getElementById('btnGenerateMingguan');
-  const statusEl = document.getElementById('statusGenerateMingguan');
-  btn.disabled = true;
-  btn.innerText = "Memproses...";
-  statusEl.innerText = "Mengambil data minggu sebelumnya & membuat PDF...";
-
-  const formData = {
-    tanggal: kegiatanTerpilih.tanggal,
-    signerName: document.getElementById('signerName').value,
-    signerNip: document.getElementById('signerNip').value,
-    signerJabatan: document.getElementById('signerJabatan').value,
-    signerTempat: document.getElementById('signerTempat').value,
-    approvalDate: document.getElementById('approvalDate').value,
-    nip: currentUsername
-  };
-
-  try {
-    const res = await callApi('generateLaporanMingguan', formData);
-    btn.disabled = false;
-    btn.innerText = "Buat Laporan Mingguan (PDF)";
-    if (res.success) {
-      statusEl.innerHTML = `✅ Berhasil! <a href="${res.pdfUrl}" target="_blank">Buka PDF (${res.pdfName})</a>`;
-    } else {
-      statusEl.innerHTML = `<span class="text-danger">Gagal: ${res.error}</span>`;
-    }
-  } catch (err) {
-    btn.disabled = false;
-    btn.innerText = "Buat Laporan Mingguan (PDF)";
-    statusEl.innerHTML = `<span class="text-danger">Error: ${err.message}</span>`;
-  }
-}
-
-const RENCANA_DEFAULT = {
-  "Senin": [
-    {uraian:"Absen masuk pusaka", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"},
-    {uraian:"Melakukan koordinasi dengan Bimas Islam", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"},
-    {uraian:"Melakukan penyusunan laporan mingguan", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"},
-    {uraian:"Melakukan penyusunan rencana mingguan", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"},
-    {uraian:"Melakukan pengajuan laporan mingguan", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"},
-    {uraian:"Melakukan pengajuan rencana mingguan", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"},
-    {uraian:"Absen pulang pusaka", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"}
-  ],
-  "Selasa": [
-    {uraian:"Absen masuk pusaka", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"},
-    {uraian:"Melakukan koordinasi dengan Kepala KUA", tempat:"KUA Lolak"},
-    {uraian:"Melakukan koordinasi dengan Imam Mesjid", tempat:"Desa"},
-    {uraian:"Melakukan penyusunan materi penyuluhan medsos", tempat:"KUA Lolak"},
-    {uraian:"Melakukan penyusunan materi penyuluhan tatap muka", tempat:"KUA Lolak"},
-    {uraian:"Melakukan penyuluhan tatap muka", tempat:"Mesjid Desa"},
-    {uraian:"Absen pulang pusaka", tempat:"Kantor Kementerian Agama Kabupaten Bolaang Mongondow"}
-  ],
-  "Rabu": [
-    {uraian:"Absen masuk pusaka", tempat:"Kantor Instansi"},
-    {uraian:"Melakukan koordinasi dengan Instansi", tempat:"Kantor Instansi"},
-    {uraian:"Melakukan penyusunan materi penyuluhan medsos", tempat:"KUA Lolak"},
-    {uraian:"Melakukan penyusunan materi penyuluhan tatap muka", tempat:"KUA Lolak"},
-    {uraian:"Melakukan penyuluhan tatap muka", tempat:"Desa"},
-    {uraian:"Absen pulang pusaka", tempat:"Kantor Instansi"}
-  ],
-  "Kamis": [
-    {uraian:"Absen masuk pusaka", tempat:"Kantor"},
-    {uraian:"Melakukan penyusunan karya tulis ilmiah", tempat:"KUA Lolak"},
-    {uraian:"Melakukan penyusunan materi penyuluhan medsos", tempat:"KUA Lolak"},
-    {uraian:"Melakukan penyusunan materi penyuluhan tatap muka", tempat:"KUA Lolak"},
-    {uraian:"Melakukan penyuluhan tatap muka", tempat:"Mesjid Desa"},
-    {uraian:"Absen pulang pusaka", tempat:"Kantor"}
-  ],
-  "Jumat": [
-    {uraian:"Absen masuk pusaka", tempat:"Rumah"},
-    {uraian:"Melakukan penyusunan materi layanan informasi", tempat:"Rumah"},
-    {uraian:"Melakukan penyusunan materi khutbah jumat", tempat:"Rumah"},
-    {uraian:"Melakukan penyusunan materi penyuluhan tatap muka", tempat:"Rumah"},
-    {uraian:"Melakukan penyampaian layanan informasi", tempat:"Mesjid Desa"},
-    {uraian:"Melakukan khutbah jumat", tempat:"Mesjid Desa"},
-    {uraian:"Melakukan penyuluhan tatap muka", tempat:"Mesjid Desa"},
-    {uraian:"Melakukan penyusunan laporan harian E-Pa", tempat:"Rumah"},
-    {uraian:"Absen pulang pusaka", tempat:"Rumah"}
-  ]
-};
-
-function parseTglDDMMYYYY(str) {
-  const parts = str.split('/');
-  return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-}
-
-function tambahHariKe(dateObj, n) {
-  const d = new Date(dateObj);
-  d.setDate(d.getDate() + n);
-  return d;
-}
-
-function formatTglDDMMYYYY(dateObj) {
-  const dd = String(dateObj.getDate()).padStart(2, '0');
-  const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const yyyy = dateObj.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-}
-
-function renderFormRencana() {
-  const hariList = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
-  const tglAwal = parseTglDDMMYYYY(kegiatanTerpilih.tanggal);
-
-  document.getElementById('judulModalDetil').innerText = "Rencana Mingguan - mulai " + kegiatanTerpilih.tanggal;
-
-  let html = `<p class="small text-muted">Edit atau hapus baris sesuai kebutuhan. Bisa pakai mikrofon keyboard untuk mengisi Uraian Kegiatan / Tempat.</p>`;
-
-  hariList.forEach((hari, dayIndex) => {
-    const tglHari = formatTglDDMMYYYY(tambahHariKe(tglAwal, dayIndex));
-    html += `
-      <div class="border rounded p-2 mb-3">
-        <h6 class="fw-bold small mb-2">${hari}, ${tglHari}</h6>
-        <div id="rencanaRows_${dayIndex}"></div>
-        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="tambahBarisRencana(${dayIndex})">+ Tambah Baris</button>
-      </div>
-    `;
-  });
-
-  document.getElementById('isiModalDetil').innerHTML = html + `<div id="statusGenerateRencana" class="small text-muted"></div>`;
-
-  hariList.forEach((hari, dayIndex) => {
-    RENCANA_DEFAULT[hari].forEach(item => {
-      tambahBarisRencana(dayIndex, item.uraian, item.tempat);
-    });
-  });
-
-  document.getElementById('footerModalDetil').innerHTML = `
-    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-    <button class="btn btn-primary" id="btnGenerateRencana" onclick="submitRencanaMingguan()">Buat Rencana Mingguan (PDF)</button>
-  `;
-}
-
-function tambahBarisRencana(dayIndex, uraian, tempat) {
-  const container = document.getElementById('rencanaRows_' + dayIndex);
-  const div = document.createElement('div');
-  div.className = 'rencana-row d-flex gap-1 mb-1';
-  div.innerHTML = `
-    <input class="form-control form-control-sm" placeholder="Uraian Kegiatan" value="${(uraian || '').replace(/"/g, '&quot;')}">
-    <input class="form-control form-control-sm" placeholder="Tempat" value="${(tempat || '').replace(/"/g, '&quot;')}" style="max-width: 40%;">
-    <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.rencana-row').remove()">✕</button>
-  `;
-  container.appendChild(div);
-}
-
-async function submitRencanaMingguan() {
-  const hariList = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
-  const tglAwal = parseTglDDMMYYYY(kegiatanTerpilih.tanggal);
-
-  const rows = [];
-  hariList.forEach((hari, dayIndex) => {
-    const tglHari = formatTglDDMMYYYY(tambahHariKe(tglAwal, dayIndex));
-    const container = document.getElementById('rencanaRows_' + dayIndex);
-    const rowEls = container.querySelectorAll('.rencana-row');
-    let noSudahDipakai = false;
-
-    rowEls.forEach(rowEl => {
-      const inputs = rowEl.querySelectorAll('input');
-      const uraian = inputs[0].value.trim();
-      const tempat = inputs[1].value.trim();
-      if (!uraian && !tempat) return;
-
-      rows.push({
-        no: noSudahDipakai ? "" : (dayIndex + 1),
-        hari: hari,
-        tanggal: tglHari,
-        uraian: uraian,
-        tempat: tempat
-      });
-      noSudahDipakai = true;
-    });
-  });
-
-  const btn = document.getElementById('btnGenerateRencana');
-  const statusEl = document.getElementById('statusGenerateRencana');
-  btn.disabled = true;
-  btn.innerText = "Memproses...";
-  statusEl.innerText = "Membuat dokumen PDF di server...";
-
-  const formData = {
-    tanggalAwal: kegiatanTerpilih.tanggal,
-    rows: rows,
-    signerName: document.getElementById('signerName').value,
-    signerNip: document.getElementById('signerNip').value,
-    signerJabatan: document.getElementById('signerJabatan').value,
-    signerTempat: document.getElementById('signerTempat').value,
-    approvalDate: document.getElementById('approvalDate').value,
-    nip: currentUsername
-  };
-
-  try {
-    const res = await callApi('generateRencanaMingguan', formData);
-    btn.disabled = false;
-    btn.innerText = "Buat Rencana Mingguan (PDF)";
-    if (res.success) {
-      statusEl.innerHTML = `✅ Berhasil! <a href="${res.pdfUrl}" target="_blank">Buka PDF (${res.pdfName})</a>`;
-    } else {
-      statusEl.innerHTML = `<span class="text-danger">Gagal: ${res.error}</span>`;
-    }
-  } catch (err) {
-    btn.disabled = false;
-    btn.innerText = "Buat Rencana Mingguan (PDF)";
-    statusEl.innerHTML = `<span class="text-danger">Error: ${err.message}</span>`;
-  }
-}
-
-const JUDUL_MATERI = {
-  materi_penyuluhan_tatap_muka: "Materi Penyuluhan Tatap Muka",
-  materi_bimbingan_konseling: "Materi Bimbingan Konseling",
-  materi_layanan_informasi: "Materi Layanan Informasi"
-};
-
-const MATERI_EXTRA_FIELDS = {
-  materi_penyuluhan_tatap_muka: [
-    { id: 'pertemuanKe', label: 'Materi Pertemuan ke' },
-    { id: 'bidang', label: 'Bidang Penyuluhan' }
-  ],
-  materi_bimbingan_konseling: [
-    { id: 'bidang', label: 'Bidang Konseling' }
-  ],
-  materi_layanan_informasi: []
-};
-
-function renderFormMateriTeks(templateKey) {
-  document.getElementById('judulModalDetil').innerText = JUDUL_MATERI[templateKey] + " - " + kegiatanTerpilih.tanggal;
-
-  const extraFields = MATERI_EXTRA_FIELDS[templateKey] || [];
-  let extraHtml = '';
-  extraFields.forEach(f => {
-    extraHtml += `<div class="mb-2"><input class="form-control form-control-sm" id="materi_${f.id}" placeholder="${f.label}"></div>`;
-  });
-
-  document.getElementById('isiModalDetil').innerHTML = `
-    ${extraHtml}
-    <p class="small text-muted">Tulis instruksi materi yang mau dibuat AI (bisa pakai mikrofon keyboard).</p>
-    <textarea id="materiInstruksi" class="form-control mb-2" rows="4" placeholder="Instruksi materi..."></textarea>
-    <div id="statusMateri" class="small text-muted"></div>
-  `;
-  document.getElementById('footerModalDetil').innerHTML = `
-    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-    <button class="btn btn-primary" id="btnGenerateMateri" onclick="submitMateriTeks('${templateKey}')">Buat Materi (PDF)</button>
-  `;
-}
-
-async function submitMateriTeks(templateKey) {
-  const instruksi = document.getElementById('materiInstruksi').value.trim();
-  if (!instruksi) return alert("Silakan isi instruksi materi terlebih dahulu.");
-
-  const extraFields = MATERI_EXTRA_FIELDS[templateKey] || [];
-  const formData = { tanggal: kegiatanTerpilih.tanggal, instruksi: instruksi, nip: currentUsername };
-  extraFields.forEach(f => {
-    formData[f.id] = document.getElementById('materi_' + f.id).value.trim();
-  });
-
-  const btn = document.getElementById('btnGenerateMateri');
-  const statusEl = document.getElementById('statusMateri');
-  btn.disabled = true;
-  btn.innerText = "Memproses AI...";
-  statusEl.innerText = "AI sedang menulis materi & membuat PDF...";
-
-  try {
-    const res = await callApi('generateMateriTeks', { templateKey: templateKey, formData: formData });
-    btn.disabled = false;
-    btn.innerText = "Buat Materi (PDF)";
-    statusEl.innerHTML = res.success
-      ? `✅ Berhasil! <a href="${res.pdfUrl}" target="_blank">Buka PDF (${res.pdfName})</a>`
-      : `<span class="text-danger">Gagal: ${res.error}</span>`;
-  } catch (err) {
-    btn.disabled = false;
-    btn.innerText = "Buat Materi (PDF)";
-    statusEl.innerHTML = `<span class="text-danger">Error: ${err.message}</span>`;
-  }
-}
-
-function renderFormInfografis() {
-  document.getElementById('judulModalDetil').innerText = "Materi Penyuluhan Medsos (Infografis) - " + kegiatanTerpilih.tanggal;
-  document.getElementById('isiModalDetil').innerHTML = `
-    <p class="small text-muted">Tulis instruksi infografis yang mau dibuat AI (bisa pakai mikrofon keyboard). Contoh: "Infografis 5 manfaat sedekah, warna hijau-emas, cocok untuk Instagram."</p>
-    <textarea id="infografisInstruksi" class="form-control mb-2" rows="4" placeholder="Instruksi infografis..."></textarea>
-    <div id="statusInfografis" class="small text-muted"></div>
-  `;
-  document.getElementById('footerModalDetil').innerHTML = `
-    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-    <button class="btn btn-primary" id="btnGenerateInfografis" onclick="submitInfografisMedsos()">Buat Infografis (PNG)</button>
-  `;
-}
-
-async function submitInfografisMedsos() {
-  const instruksi = document.getElementById('infografisInstruksi').value.trim();
-  if (!instruksi) return alert("Silakan isi instruksi infografis terlebih dahulu.");
-
-  const btn = document.getElementById('btnGenerateInfografis');
-  const statusEl = document.getElementById('statusInfografis');
-  btn.disabled = true;
-  btn.innerText = "Memproses AI...";
-  statusEl.innerText = "AI sedang membuat gambar infografis...";
-
-  try {
-    const res = await callApi('generateInfografisMedsos', { tanggal: kegiatanTerpilih.tanggal, instruksi: instruksi, nip: currentUsername });
-    btn.disabled = false;
-    btn.innerText = "Buat Infografis (PNG)";
-    statusEl.innerHTML = res.success
-      ? `✅ Berhasil! <a href="${res.pngUrl}" target="_blank">Buka PNG (${res.pngName})</a>`
-      : `<span class="text-danger">Gagal: ${res.error}</span>`;
-  } catch (err) {
-    btn.disabled = false;
-    btn.innerText = "Buat Infografis (PNG)";
-    statusEl.innerHTML = `<span class="text-danger">Error: ${err.message}</span>`;
-  }
-}
 </script>
 </body>
 </html>
