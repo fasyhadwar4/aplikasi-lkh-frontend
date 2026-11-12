@@ -467,13 +467,20 @@ function callApiForm(action, params = {}) {
     const mulai = Date.now();
     const bersihkan = () => { form.remove(); setTimeout(() => iframe.remove(), 1000); };
 
+       let pernahDiterima = false;
     const poll = async () => {
-      if (Date.now() - mulai > 120000) {
+      const lama = Date.now() - mulai;
+      if (!pernahDiterima && lama > 30000) {
         bersihkan();
-        return reject(new Error('Waktu habis menunggu hasil AI. Coba lagi.'));
+        return reject(new Error('Kiriman gambar tidak sampai ke server. Coba lagi atau gunakan jaringan lain.'));
+      }
+      if (lama > 120000) {
+        bersihkan();
+        return reject(new Error('Server menerima gambar tetapi AI belum selesai. Coba lagi.'));
       }
       try {
         const res = await callApi('getHasilProses', { reqId });
+        if (res && res.diterima) pernahDiterima = true;
         if (res && res.pending) return setTimeout(poll, 2500);
         bersihkan();
         resolve(res);
